@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $rootScope, $ionicModal, $ionicPopover, $timeout, $cordovaToast) {
+.controller('AppCtrl', function($scope, $http, $rootScope, $ionicModal, $ionicPopover, $timeout, $cordovaToast, localStorageService) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -11,6 +11,40 @@ angular.module('starter.controllers', [])
     $scope.hasHeaderFabRight = false;
     $scope.enableToast = false;
     $rootScope.data = [];
+    $rootScope.data.allCountries = localStorageService.get("countries");
+    //localStorageService.remove("countries")
+
+    $rootScope.data.getCountries = function() {
+        console.log(localStorageService.get("countries"));
+        if (localStorageService.get("countries") !== null) {
+            $rootScope.data.allCountries = localStorageService.get("countries");
+        } else {
+            console.log(localStorageService.get("countries"));
+            $http({
+                method: "GET",
+                url: path + '/master.php',
+                params: {
+                    type: 'getAllCountries'
+                }
+            }).then(function mySucces(response) {
+                console.log(response.data);
+                localStorageService.set("countries", response.data);
+                $rootScope.data.allCountries = localStorageService.get("countries");
+            }, function myError(response) {
+                console.log(response);
+                //$rootScope.data.isLoadingNext = false;
+            });
+        }
+
+
+    };
+
+    $rootScope.data.getCountries();
+
+
+
+
+
     $scope.showToast = function(message, duration, location) {
         $cordovaToast.show(message, duration, location).then(function(success) {
             console.log("The toast was shown");
@@ -454,7 +488,7 @@ angular.module('starter.controllers', [])
 
 
         $scope.openChat = function(toid) {
-            
+
             $rootScope.data.toid = toid; //3013;
             console.log($rootScope.data.myid + "===" + $rootScope.data.toid);
             window.location.href = "#/app/chat";
@@ -637,38 +671,39 @@ angular.module('starter.controllers', [])
 
 
     }).controller('ProfileCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
-       
-        $rootScope.data.myid = localStorage.getItem("userid");
-        $scope.getMyProfile = function(){
-                    $http({
-                        method: "GET",
-                        url: path + '/master.php',
-                        params: {
-                            userid : $rootScope.data.myid,
-                            type : 'getUserDetails'
-                        }
-                    }).then(function mySucces(response) {
-                        console.log(response);
-                        var data = response.data;
-                        var el = $("#myGender");
-                        el.val(data[0][8]).attr('selected', true).siblings('option').removeAttr('selected');
-                        //el.selectmenu("refresh", true);
-                        var el = $("#yourGender");
-                        el.val(data[0][9]).attr('selected', true).siblings('option').removeAttr('selected');
-                        //el.selectmenu("refresh", true);
-                        var el = $("#birthAge");
-                        el.val(data[0][10]).attr('selected', true).siblings('option').removeAttr('selected');
-                        //el.selectmenu("refresh", true);
-                        if (!$(".countryName").val().length)
-                            $(".countryName").val(data[0][3]);
-                        if (!$(".stateName").val().length)
-                            $(".stateName").val(data[0][4]);
 
-                        $(".mYuserName").html(data[0][1]);
-                    }, function myError(response) {
-                        console.log(response);
-                        //$rootScope.data.isLoadingNext = false;
-                    });
+        $rootScope.data.myid = localStorage.getItem("userid");
+
+        $scope.getMyProfile = function() {
+            $http({
+                method: "GET",
+                url: path + '/master.php',
+                params: {
+                    userid: $rootScope.data.myid,
+                    type: 'getUserDetails'
+                }
+            }).then(function mySucces(response) {
+                console.log(response);
+                var data = response.data;
+                var el = $("#myGender");
+                el.val(data[0][8]).attr('selected', true).siblings('option').removeAttr('selected');
+                //el.selectmenu("refresh", true);
+                var el = $("#yourGender");
+                el.val(data[0][9]).attr('selected', true).siblings('option').removeAttr('selected');
+                //el.selectmenu("refresh", true);
+                var el = $("#birthAge");
+                el.val(data[0][10]).attr('selected', true).siblings('option').removeAttr('selected');
+                //el.selectmenu("refresh", true);
+                if (!$(".countryName").val().length)
+                    $(".countryName").val(data[0][3]);
+                if (!$(".stateName").val().length)
+                    $(".stateName").val(data[0][4]);
+
+                $(".mYuserName").html(data[0][1]);
+            }, function myError(response) {
+                console.log(response);
+                //$rootScope.data.isLoadingNext = false;
+            });
 
         };
         $scope.getMyProfile();
@@ -752,5 +787,99 @@ angular.module('starter.controllers', [])
 
 
 
-    })
-;
+    }).controller('FilterCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
+
+        $rootScope.data.myid = localStorage.getItem("userid");
+
+
+
+
+    }).controller('MessagesCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
+
+        $rootScope.data.myid = localStorage.getItem("userid");
+        $scope.allMessages = [];
+        $scope.loadMessages = function(){
+                    $http({
+                        method: "GET",
+                        url: path + '/master.php',
+                        params: {
+                            usrid: $rootScope.data.myid,
+                            msgtype: 'sent',
+                            type: 'getMessagesRec'
+
+                        }
+                    }).then(function mySucces(response) {
+                        console.log(response);
+                        $scope.allMessages = response.data;
+                        $timeout(function() {
+                            $(".timeago").timeago();
+                        }, 0);
+                        // $ionicScrollDelegate.scrollBottom();
+                    }, function myError(response) {
+                        console.log(response);
+                        //$rootScope.data.isLoadingNext = false;
+                    });
+        };
+        $scope.loadMessages();
+return;
+    $.ajax({
+        type : 'GET',
+        url : path+'/master.php',
+        data : {
+            usrid : localStorage.getItem("userid"),
+            type : 'getMessagesRec'
+        },
+        //data: { usrid:"1327",type:'getMessagesRec' },
+        dataType : 'json',
+        beforeSend : function () {
+            $(".ui-loader").show();
+        },
+        success : function (data) {
+            $(".messagesrecivedhere").html("");
+            $.each(data, function (i) {
+                if (data[i][1] != "00001") {
+
+                    $gender = "";
+                    if (data[i][17] == 'm') {
+                        $gender = "Male";
+                    } else if (data[i][17] == 'f') {
+                        $gender = "Female";
+                    }
+
+                    $looking = "";
+                    if (data[i][18] == 'm') {
+                        $looking = "Male";
+                    } else if (data[i][18] == 'f') {
+                        $looking = "Female";
+                    } else if (data[i][18] == 'e') {
+                        $looking = "Everyone";
+                    }
+
+                    $seen = "";
+                    if (data[i][8] == '0') {
+                        $seen = "unseen";
+                    }
+
+                    var thisDiv = '<ion-item class="openChat item adBlockOuter ' + $gender + ' ' + $seen + '"><div class="outer messageReccontainer Male " data-usrnm="' + data[i][2] + '" data-userid="' + data[i][1] + '" adid="' + data[i][0] + '"><div class="notificationIcongreen"></div><div style="padding:0px;" class="innerMsgDiv"><span class="statusTitle">' + data[i][5] + '</span><table style="width:100%;"><tbody><tr><td><div class="adLocation">' + data[i][13] + ',' + data[i][12] + "<br>Looking for " + $looking + '</div></td><td><div class="adUsername"><span class="fColor">' + data[i][2] + '<span class="ageItem">20</span><span class="femaleItem"><i class="icon ion-female"></i></span><span class="maleItem"><i class="icon ion-male"></i></span></span><br><div class="userStat"><span class="timeago" title="' + data[i][7] + '">' + data[i][7] + ' </span></div></div></td></tr></tbody></table></div></div></ion-item>';
+
+                    $(".messagesrecivedhere").append(thisDiv);
+                    $(".timeago").timeago();
+                } else {
+                    $(".messagesrecivedhere").html("No Messages Yet :)");
+                }
+            });
+            $(".ui-loader").hide();
+        },
+        error : function () {
+            $(".ui-loader").hide();
+            //alert("Error! Plz Try Again");
+        }
+    });
+    //clearTimeout(getMsg);
+
+    //if($(".noInterConnection").is(":visible"))
+    //checkNotifi();
+
+
+
+    });

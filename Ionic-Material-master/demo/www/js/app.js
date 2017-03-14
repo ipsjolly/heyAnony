@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','ngCordova','LocalStorageModule'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -156,6 +156,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
            
         }
     })
+    .state('app.filter', {
+        url: '/filter',
+        showSideBar:true,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/filter.html',
+                controller: 'FilterCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        },
+        onEnter: function(){
+        },
+        onExit: function(){
+           
+        }
+    })
 
     .state('app.wall', {
         url: '/wall',
@@ -163,6 +181,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             'menuContent': {
                 templateUrl: 'templates/wall.html',
                 controller: 'WallCtrl'
+            },
+            'fabContent': {
+                template: '<button id="fab-profile" ng-click="gotopost()" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
+                controller: function ($scope,$timeout) {
+                    $scope.gotopost = function(){
+                        window.location.href = "#/app/post";
+                    };
+                    /*$timeout(function () {
+                        document.getElementById('fab-profile').classList.toggle('on');
+                    }, 800);*/
+                }
+            }
+        }
+    })
+
+    .state('app.messages', {
+        url: '/messages',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/messages.html',
+                controller: 'MessagesCtrl'
             },
             'fabContent': {
                 template: '<button id="fab-profile" ng-click="gotopost()" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
