@@ -27,7 +27,7 @@ function setNotification() {
 		success : function (data) {
 			if (data == 1) {
 
-				window.location.href = "index2.html";
+				window.location.href = "#/app/wall";
 
 			} else {}
 			$(".ui-loader").hide();
@@ -98,7 +98,7 @@ function onNotification(e) {
 				success : function (data) {
 					if (data == 1) {
 
-						window.location.href = "index2.html";
+						window.location.href = "#/app/wall";
 
 					} else {}
 					$(".ui-loader").hide();
@@ -308,7 +308,7 @@ function sendMsg() {
 }
 
 function setProfile() {
-
+return;
 	$.ajax({
 		type : 'GET',
 		url : path+'/master.php',
@@ -386,7 +386,7 @@ function setMyid(x) {
 		},
 		beforeSend : function () {},
 		success : function (data) {
-			localStorage.setItem("userid", data);
+			localStorage.setItem("userid", parseInt(data));
 		},
 		error : function () {
 			$(".ui-loader").hide();
@@ -729,7 +729,7 @@ function loadPersonData() {
 					//$(".timeago").timeago();
 				} else {
 					$(".requestForThisGrp").html("No Posts Yet... Try Posting Yours Using Above Form... :)");
-					$(".loadPostPrevFrom").hide();
+					//$(".loadPostPrevFrom").hide();
 				}
 
 				$(".loadPostPrevFrom").attr("data-lastPostId", data[i][0]);
@@ -781,7 +781,7 @@ $(function () {
 	// 		setTimeout(function () {
 	// 			//$.mobile.changePage('#showPersons');
 	// 			//setNotification();
-	// 			window.location.href = "index2.html";
+	// 			window.location.href = "#/app/wall";
 	// 		}, 2500);
 	// 	};
 		
@@ -815,7 +815,7 @@ $(function () {
 	});
 
 	$(document).on("click", ".loadPostPrevFrom", function () {
-
+return;
 		var thisVal = $("#selectGenderToSee").val();
 		var thisCountry = $("#selectCountryToSeeFrom").val();
 		var lastPostId = $(".loadPostPrevFrom").attr("data-lastPostId");
@@ -868,7 +868,7 @@ $(function () {
 						//$(".timeago").timeago();
 					} else {
 						$(".requestForThisGrp").append("<div class='noMore'>No More Posts :)</div>");
-						$(".loadPostPrevFrom").hide();
+						//$(".loadPostPrevFrom").hide();
 					}
 
 					$(".loadPostPrevFrom").attr("data-lastPostId", data[i][0]);
@@ -1091,66 +1091,7 @@ $(function () {
 
 	$(document).on("click", "#registerSignin", function () {
 
-		var urn = $.trim($(".username").val()).toLowerCase();
-		var pas = $.trim($(".password").val());
-		if (!urn.length) {
-			alert("Enter Username!");
-			$(".username").focus();
-			return false;
-		} else if (!pas.length) {
-			alert("Enter Password");
-			$(".password").focus();
-			return false;
-		} else {
-			$.ajax({
-				type : 'GET',
-				url : path+'/master.php',
-				data : {
-					urn : urn,
-					pas : pas,
-					type : 'su'
-				},
-				beforeSend : function () {
-					$(".ui-loader").show();
-					//$(".firstPageIntro").slideDown();
-					$("#loginfail").removeClass("active");
-					$("#registerSignin").html("Please Wait...");
-					//$("#registerSignin").button("refresh");
-				},
-				success : function (data) {
-					if (data == 0) {
-						$(".ui-loader").hide();
-						//$(".firstPageIntro").slideUp();
-						$("#loginfail").addClass("active");
-					} else if (data == 1) {
-						$("#loginfail").removeClass("active");
-						//$(".firstPageIntro").fadeIn();
-						localStorage.setItem("username", urn);
-						setMyid(urn);
-						setNotification();
-						$(".ui-loader").hide();
-						//$.mobile.changePage('#registerNotification');
 
-						//if(resendLocation)
-						//navigator.geolocation.getCurrentPosition(onSuccess, onError);
-					} else if (data == 2) {
-						$("#loginfail").removeClass("active");
-						localStorage.setItem("username", urn);
-						setMyid(urn);
-
-						setNotification();
-						//navigator.geolocation.getCurrentPosition(onSuccess, onError);
-
-					}
-					//$("#registerSignin").html("Register / Sign in");
-				},
-				error : function () {
-					alert("Oops, there was an error while registering/signing in. Sorry about that.");
-					$("#registerSignin").html("Register / Sign in");
-					$(".ui-loader").hide();
-				}
-			});
-		}
 
 	});
 

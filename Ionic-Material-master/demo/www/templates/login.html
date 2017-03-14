@@ -7,20 +7,22 @@
             </div>
         </div>
         <div class="list">
-             <label class="item item-input item-floating-label">
-                <span class="input-label">First Name</span>
-                <input  placeholder="Username" class="username"  type="text" placeholder="First Name">
-              </label>
-              <label class="item item-input item-floating-label">
-                <span class="input-label">Last Name</span>
-                <input  placeholder="Password" class="password" type="text" placeholder="Last Name">
-              </label>
+             <label class="item item-input item-floating-label custom-login-label">
+                <i class="icon ion-android-person placeholder-icon"></i>
+                <span class="input-label">Username</span>
+                <input type="text" placeholder="Username" class="username" ng-model="data.username">
+            </label>
+            <label class="item item-input item-floating-label custom-login-label">
+                <i class="icon ion-android-lock placeholder-icon"></i>
+                <span class="input-label">Password</span>
+                <input type="text" placeholder="Password" class="password" ng-model="data.password">
+            </label>
         </div>
         <div class="padding">
-            <button ui-sref="app.profile" class="button button-full button-positive ink"  id="registerSignin" >Register / Sign in</button>
+            <button class="button button-full button-positive ink" ng-click="loginRegister();" >Register / Sign in</button>  
         </div>
-        <!-- <div class="button-bar social-login">
-            <button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
+        <!-- ui-sref="app.profile" <div class="button-bar social-login">
+            <button class="button button-small button-border icon-left ion-social-google id="registerSignin"  button-assertive-900">Google+</button>
             <button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>
             <button class="button button-small button-border icon-left ion-social-facebook button-positive-900">Facebook</button>
         </div> -->

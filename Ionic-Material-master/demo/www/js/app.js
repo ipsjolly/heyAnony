@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','ngCordova'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -93,6 +93,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     .state('app.login', {
         url: '/login',
+        showSideBar:false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/login.html',
@@ -104,16 +105,71 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         }
     })
 
+    .state('app.chat', {
+        url: '/chat',
+        showSideBar:true,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/chat.html',
+                controller: 'ChatCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        }
+    })
+
+    .state('app.post', {
+        url: '/post',
+        showSideBar:true,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/post.html',
+                controller: 'PostCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        },
+        onEnter: function(){
+        },
+        onExit: function(){
+           
+        }
+    })
+
     .state('app.profile', {
         url: '/profile',
+        showSideBar:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/profile.html',
                 controller: 'ProfileCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
-                controller: function ($timeout) {
+                template: ''
+            }
+        },
+        onEnter: function(){
+        },
+        onExit: function(){
+           
+        }
+    })
+
+    .state('app.wall', {
+        url: '/wall',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/wall.html',
+                controller: 'WallCtrl'
+            },
+            'fabContent': {
+                template: '<button id="fab-profile" ng-click="gotopost()" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
+                controller: function ($scope,$timeout) {
+                    $scope.gotopost = function(){
+                        window.location.href = "#/app/post";
+                    };
                     /*$timeout(function () {
                         document.getElementById('fab-profile').classList.toggle('on');
                     }, 800);*/

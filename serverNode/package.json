@@ -1,0 +1,14 @@
+{
+  "name": "servernode",
+  "version": "1.0.0",
+  "description": "server chat app test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ipsjolly",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^2.2.0"
+  }
+}
