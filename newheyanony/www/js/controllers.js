@@ -16,11 +16,11 @@ angular.module('starter.controllers', [])
     //localStorageService.remove("countries")
 
     $rootScope.data.getCountries = function() {
-        console.log(localStorageService.get("countries"));
+        //console.log(localStorageService.get("countries"));
         if (localStorageService.get("countries") !== null) {
             $rootScope.data.allCountries = localStorageService.get("countries");
         } else {
-            console.log(localStorageService.get("countries"));
+            //console.log(localStorageService.get("countries"));
             $http({
                 method: "GET",
                 url: path + '/master.php',
@@ -28,7 +28,7 @@ angular.module('starter.controllers', [])
                     type: 'getAllCountries'
                 }
             }).then(function mySucces(response) {
-                console.log(response.data);
+                //console.log(response.data);
                 localStorageService.set("countries", response.data);
                 $rootScope.data.allCountries = localStorageService.get("countries");
             }, function myError(response) {
@@ -318,7 +318,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PostCtrl', function($scope, $http, $rootScope, $ionicPopup, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
-
+    console.log($rootScope.data.usersession);
     $rootScope.data.myid = localStorage.getItem("userid");
     $scope.allPostedStatus = [];
     $scope.getAllPosts = function() {
