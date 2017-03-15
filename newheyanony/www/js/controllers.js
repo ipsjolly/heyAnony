@@ -11,9 +11,16 @@ angular.module('starter.controllers', [])
     $scope.hasHeaderFabRight = false;
     $scope.enableToast = false;
     $rootScope.data = [];
+    $rootScope.data.otheruserid = localStorageService.get("otheruser");
     $rootScope.data.allCountries = localStorageService.get("countries");
     $rootScope.data.usersession = localStorageService.get("usersession");
     //localStorageService.remove("countries")
+
+    $rootScope.data.setOtherUser = function(otheruserid){
+        localStorageService.set("otheruser",otheruserid);
+        $rootScope.data.otheruserid = otheruserid;
+    }
+
 
     $rootScope.data.getCountries = function() {
         //console.log(localStorageService.get("countries"));
@@ -44,12 +51,11 @@ angular.module('starter.controllers', [])
 
 
     $rootScope.data.setusersession = function(username){
-        
+        //localStorageService.remove("usersession")
         if (0) {
             $rootScope.data.usersession = localStorageService.get("usersession");
             window.location.href = "#/app/wall";
         } else {
-            console.log(localStorageService.get("countries"));
             $http({
                 method: "GET",
                 url: path + '/master.php',
@@ -58,12 +64,12 @@ angular.module('starter.controllers', [])
                     type : 'getUserdetails'
                 }
             }).then(function mySucces(response) {
-                console.log(response.data);
-                localStorageService.set("usersession", response.data);
+                //console.log(response.data);
+                localStorageService.set("usersession", response.data[0]);
                 $rootScope.data.usersession = localStorageService.get("usersession");
                 window.location.href = "#/app/wall";
             }, function myError(response) {
-                console.log(response);
+                //console.log(response);
                 //$rootScope.data.isLoadingNext = false;
             });
         }
@@ -486,7 +492,7 @@ angular.module('starter.controllers', [])
                     type: 'getstype'
                 }
             }).then(function mySucces(response) {
-                console.log(response.data);
+               // console.log(response.data);
                 $rootScope.data.wallList = response.data;
                 $timeout(function() {
                     $(".timeago").timeago();
@@ -722,25 +728,25 @@ angular.module('starter.controllers', [])
                 method: "GET",
                 url: path + '/master.php',
                 params: {
-                    userid: $rootScope.data.myid,
-                    type: 'getUserDetails'
+                    frmusr: $rootScope.data.myid,
+                    type: 'getUserdetails'
                 }
             }).then(function mySucces(response) {
                 console.log(response);
                 var data = response.data;
                 var el = $("#myGender");
-                el.val(data[0][8]).attr('selected', true).siblings('option').removeAttr('selected');
+                el.val(data[0][4]).attr('selected', true).siblings('option').removeAttr('selected');
                 //el.selectmenu("refresh", true);
                 var el = $("#yourGender");
-                el.val(data[0][9]).attr('selected', true).siblings('option').removeAttr('selected');
+                el.val(data[0][5]).attr('selected', true).siblings('option').removeAttr('selected');
                 //el.selectmenu("refresh", true);
                 var el = $("#birthAge");
-                el.val(data[0][10]).attr('selected', true).siblings('option').removeAttr('selected');
+                el.val(data[0][6]).attr('selected', true).siblings('option').removeAttr('selected');
                 //el.selectmenu("refresh", true);
                 if (!$(".countryName").val().length)
-                    $(".countryName").val(data[0][3]);
+                    $(".countryName").val(data[0][2]);
                 if (!$(".stateName").val().length)
-                    $(".stateName").val(data[0][4]);
+                    $(".stateName").val(data[0][3]);
 
                 $(".mYuserName").html(data[0][1]);
             }, function myError(response) {
@@ -872,8 +878,52 @@ angular.module('starter.controllers', [])
 
     }).controller('AboutUserCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
-        $rootScope.data.myid = localStorage.getItem("userid");
-        
+       console.log($rootScope.data.otheruserid);
+        $scope.loadOtherProfile = function(msgtype){
+            $scope.showMsgType = msgtype;
+                    $http({
+                        method: "GET",
+                        url: path + '/master.php',
+                        params: {
+                            frmusr: $rootScope.data.otheruserid,
+                            type: 'getUserdetails'
 
+                        }
+                    }).then(function mySucces(response) {
+                        console.log(response);
+                        $scope.allMessages = response.data;
+                        // $timeout(function() {
+                        //     $(".timeago").timeago();
+                        //     ionicMaterialMotion.fadeSlideIn();
+                        //     ionicMaterialInk.displayEffect();
+                        // }, 0);
+                    }, function myError(response) {
+                        console.log(response);
+                    });
+        };
+        $scope.loadOtherProfile();
+        $scope.allPostedStatus = [];
+        $scope.getAllPosts = function() {
+            $http({
+                method: "GET",
+                url: path + '/master.php',
+                params: {
+                    userid: $rootScope.data.otheruserid,
+                    type: 'getAllStatus'
+
+                }
+            }).then(function mySucces(response) {
+                console.log(response);
+                $scope.allPostedStatus = response.data;
+                $timeout(function() {
+                    $(".timeago").timeago();
+                }, 0);
+                // $ionicScrollDelegate.scrollBottom();
+            }, function myError(response) {
+                console.log(response);
+                //$rootScope.data.isLoadingNext = false;
+            });
+        };
+        $scope.getAllPosts();
 
     });

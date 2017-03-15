@@ -1,5 +1,5 @@
 <ion-view view-title="Profile">
-    <ion-content ng-class="{expanded:$scope.isExpanded}"  scroll="false">
+    <ion-content ng-class="{expanded:$scope.isExpanded}"  >
 <!--         <div class="hero slide-up" style="background-image: url('img/profile-bg.jpg');">
             <div class="content">
                 <div class="avatar" style="background-image: url('img/daenerys.jpg');"></div>
@@ -19,7 +19,7 @@
             </a>
         </div> -->
         <!-- <h4 class="content padding double-padding-x">Following</h4> -->
-        <ion-scroll class="list loadPostPrevFrom" data-lastPostId="0"  direction="y" style="width: 100%; height: 100%" >
+        <!-- <ion-scroll class="list loadPostPrevFrom" data-lastPostId="0"  direction="y" style="width: 100%; height: 100%" > -->
                         
             <div class="list card stable-bg" ng-repeat="w in data.wallList">
 
@@ -49,6 +49,6 @@
 
 
 
-        </ion-scroll>
+       <!--  </ion-scroll> -->
     </ion-content>
 </ion-view>

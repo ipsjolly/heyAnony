@@ -210,16 +210,16 @@ $gcmf->send_notification(array($registrationId),$title,$msg,0);
 
 $fromUid = $_REQUEST['frmusr'];
 
-$query = "SELECT * FROM tbl_urs WHERE usernm = '$fromUid'";
+$query = "SELECT pk_id,usernm,country,state,iam,ilike,age,time FROM tbl_urs WHERE pk_id = '$fromUid'";
 $json = array(); 
 $result = mysqli_query($con,$query) or die(mysqli_error());
 //$row = mysqli_fetch_array($result,MYSQLI_BOTH) or die(mysqli_error());
 //echo $row['pk_id'];
-if(mysqli_num_rows($result)){
-while($row=mysqli_fetch_row($result)){ 
-$json[]=$row; 
-} 
-} 
+	if(mysqli_num_rows($result)){
+		while($row=mysqli_fetch_row($result)){ 
+			$json[]=$row; 
+		} 
+	} 
 echo json_encode($json); 
 
 }else if($type == "getChatUserDetails"){
