@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $rootScope, $ionicModal, $ionicPopover, $timeout, $cordovaToast, localStorageService) {
+.controller('AppCtrl', function($scope,$location, $http, $rootScope, $ionicModal, $ionicPopover, $timeout, $cordovaToast, localStorageService) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -11,6 +11,17 @@ angular.module('starter.controllers', [])
     $scope.hasHeaderFabRight = false;
     $scope.enableToast = false;
     $rootScope.data = [];
+    $rootScope.data.goto = function(path){
+        $location.path(path);
+    }
+
+    $rootScope.data.openChat = function(toid) {
+
+        $rootScope.data.toid = toid; //3013;
+        //console.log($rootScope.data.myid + "===" + $rootScope.data.toid);
+        //window.location.href = "#/app/chat";
+        $location.path('/app/chat');
+    };
     $rootScope.data.otheruserid = localStorageService.get("otheruser");
     $rootScope.data.allCountries = localStorageService.get("countries");
     $rootScope.data.usersession = localStorageService.get("usersession");
@@ -61,7 +72,7 @@ angular.module('starter.controllers', [])
                 url: path + '/master.php',
                 params: {
                     frmusr : username,
-                    type : 'getUserdetails'
+                    type : 'getUserdetailsName'
                 }
             }).then(function mySucces(response) {
                 //console.log(response.data);
@@ -498,6 +509,8 @@ angular.module('starter.controllers', [])
                     $(".timeago").timeago();
                     $(".loadPostPrevFrom").attr("data-lastPostId", $rootScope.data.wallList[$rootScope.data.wallList.length - 1][0]);
                     $rootScope.data.isLoadingNext = false;
+                    //ionicMaterialMotion.fadeSlideIn();
+                    ionicMaterialInk.displayEffect();
                 }, 0);
 
             }, function myError(response) {
@@ -536,12 +549,7 @@ angular.module('starter.controllers', [])
         };
 
 
-        $scope.openChat = function(toid) {
 
-            $rootScope.data.toid = toid; //3013;
-            console.log($rootScope.data.myid + "===" + $rootScope.data.toid);
-            window.location.href = "#/app/chat";
-        };
 
 
 
@@ -607,7 +615,7 @@ angular.module('starter.controllers', [])
                 method: "GET",
                 url: path + '/master.php',
                 params: {
-                    user: $rootScope.data.myid,
+                    user: $rootScope.data.usersession[0],
                     to: $rootScope.data.toid,
                     lastId: $scope.lastMsgId,
                     type: 'getOlderMsg'
@@ -891,12 +899,7 @@ angular.module('starter.controllers', [])
                         }
                     }).then(function mySucces(response) {
                         console.log(response);
-                        $scope.allMessages = response.data;
-                        // $timeout(function() {
-                        //     $(".timeago").timeago();
-                        //     ionicMaterialMotion.fadeSlideIn();
-                        //     ionicMaterialInk.displayEffect();
-                        // }, 0);
+                        $scope.otherProfile = response.data[0];
                     }, function myError(response) {
                         console.log(response);
                     });

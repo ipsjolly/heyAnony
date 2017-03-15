@@ -43,10 +43,10 @@
                     <a class="tab-item ink" ng-click="delConfirm(p[0])" data-ink-color="#336699" data-ink-opacity="0.5">
                         <i class="icon ion-android-delete"></i> Remove
                     </a>
-                    <a class="tab-item ink" ng-click="openChat(w[0])" data-ink-color="#336699" data-ink-opacity="0.5">
+                    <a class="tab-item ink" ng-click="data.openChat(w[0])" data-ink-color="#336699" data-ink-opacity="0.5">
                         <i class="icon ion-chatbubble-working"></i>Message
                     </a>
-                    <a class="tab-item ink" ng-click="data.setOtherUser(w[1])" data-ink-color="#336699" data-ink-opacity="0.5">
+                    <a class="tab-item ink" ng-click="data.setOtherUser(w[1]);data.goto('/app/aboutuser');" data-ink-color="#336699" data-ink-opacity="0.5">
                         <i class="icon ion-ios-information"></i>Profile
                     </a>
                 </div>
