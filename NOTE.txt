@@ -1,0 +1,184 @@
+How to Save objects in Sessions to Prevent API Calls using Angular Services
+In AngularJS application 
+angular.module('todoList',[])
+	//Defining Controller
+	.controller('GetToDoCtrl',
+		function(ToDoService){
+			var todoId = '56';
+			ToDoService.getToDoList(todoId).then(function(response){
+				//Get response from $http c all or Session if already set
+				console.log(response);
+			});
+		})
+		.factory('ToDoService', function($http,$sessionStorage,$q) {
+			return {
+			  getToDoList: function(id) {
+				 
+					var deferred = $q.defer();
+					//Check if session is set
+					if($sessionStorage.settingData == undefined ){
+						//API will be called for first time
+						$http.get('api/users/todolist/'+id)
+						.success(function (response) {
+							var data = {data:response};
+							$sessionStorage.settingData = data;
+							deferred.resolve(data);
+						});
+					}else{
+						 //If session is already set 
+						 deferred.resolve($sessionStorage.settingData); 
+					}    
+					return deferred.promise;
+					
+			  }
+			}
+		});
+		
+		
+		We can create PDF of multiple pages, but create partitions of pages in HTML saperated by class
+		
+		Then we can combine both jsPDF and html2canvas as follow 
+		
+		var pdf = new jsPDF('p', 'pt', [580, 630]);
+
+        html2canvas($(".page1")[0], {
+            onrendered: function(canvas) {
+                document.body.appendChild(canvas);
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 10), (height));
+
+            }
+        });
+        html2canvas($(".page2")[0], {
+            allowTaint: true,
+            onrendered: function(canvas) {
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var htmlH = $(".page2").height() + 100;
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addPage(580, htmlH);
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 40), (height));
+            }
+        });
+        html2canvas($(".page3")[0], {
+            allowTaint: true,
+            onrendered: function(canvas) {
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var htmlH = $(".page2").height() + 100;
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addPage(580, htmlH);
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 40), (height));
+            }
+        });
+        setTimeout(function() {
+
+            //jsPDF code to save file
+            pdf.save('sample.pdf');
+        }, 0);
+		
+		complete tutorial is given here http://freakyjolly.com/create-multipage-html-pdf-jspdf-html2canvas/
+		
+         
+		var pdf = new jsPDF('p', 'pt', [580, 630]);
+        html2canvas($(".pdf-table-wrap")[0], {
+            onrendered: function(canvas) {
+                document.body.appendChild(canvas);
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 10), (height));
+
+            }
+        });
+        setTimeout(function() {
+            //jsPDF code to save file
+            pdf.save('sample.pdf');
+        }, 0);
+ 
+ 
+ 
+ $(document).ready(function() {
+
+    //Generate PDF
+    function generatePDF() {
+        window.scrollTo(0, 0);
+
+        var pdf = new jsPDF('p', 'pt', [580, 630]);
+
+        html2canvas($(".page1")[0], {
+            onrendered: function(canvas) {
+                document.body.appendChild(canvas);
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 10), (height));
+
+            }
+        });
+        html2canvas($(".page2")[0], {
+            allowTaint: true,
+            onrendered: function(canvas) {
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var htmlH = $(".page2").height() + 100;
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addPage(580, htmlH);
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 40), (height));
+            }
+        });
+        html2canvas($(".page3")[0], {
+            allowTaint: true,
+            onrendered: function(canvas) {
+                var ctx = canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png", 1.0);
+                var htmlH = $(".page2").height() + 100;
+                var width = canvas.width;
+                var height = canvas.clientHeight;
+                pdf.addPage(580, htmlH);
+                pdf.addImage(imgData, 'PNG', 20, 20, (width - 40), (height));
+            }
+        });
+        setTimeout(function() {
+
+            //jsPDF code to save file
+            pdf.save('sample.pdf');
+
+            //Generate BLOB object
+            var blob = pdf.output("blob");
+
+            //Getting URL of blob object
+            var blobURL = URL.createObjectURL(blob);
+
+            //Showing PDF generated in iFrame element
+            var iframe = document.getElementById('sample-pdf');
+            iframe.src = blobURL;
+
+            //Setting download link
+            var downloadLink = document.getElementById('pdf-download-link');
+            downloadLink.href = blobURL;
+        }, 0);
+    };
+    generatePDF();
+
+});
+ 
+ 
+ 
+ 
+ 
+ $('table.table-striped').tbodyScroll({
+                         thead_height:   '30px',
+                         tbody_height:   '280px',
+                         tfoot_height:   '20px',
+                         head_bgcolor:   'transparent',
+                         foot_bgcolor:   'transparent'
+                    });
