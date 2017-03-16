@@ -1,0 +1,644 @@
+<div class="sales-page wrapper wrapper-content animated fadeInLeft">
+    <form>
+        <div class=" filter">
+            <div class="ibox" style="margin-bottom: 0px;">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" ng-model="filter.category_id" data-size="15" ng-change="onchange_filters();" id="category">
+                                        <option value="">Category</option>
+                                        <option ng-repeat="category in data.categories" value="{{category.segment_category_id}}">{{category.segment_category_name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" id="machine" ng-model="filter.machine_id" data-size="15" ng-change="onchange_filters();">
+                                        <option value="">Machine</option>
+                                        <option ng-repeat="machine in data.machines" value="{{machine.machine_id}}">{{machine.machine_no}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" name="producttype" id="producttype" data-size="15" ng-model="filter.product_type_id" ng-change="onchange_filters();">
+                                        <option value="">Product Type</option>
+                                        <option ng-repeat="product in data.product_types" value="{{product.product_type_id}}">{{product.product_type_name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" name="territoryincharge" data-size="15" id="territoryincharge" ng-model="filter.territory_incharge_id" ng-change="onchange_filters();">
+                                        <option value="">T.Incharge</option>
+                                        <option ng-repeat="territory in data.territories_incharge" value="{{territory.sale_territory_incharge_id}}">{{territory.sale_territory_incharge_name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-live-search="true"  data-width="100%" id="dealer" name="dealer" ng-model="filter.dealer_id" data-size="15" ng-change="onchange_filters();">
+                                        <option value="">Dealer</option>
+                                        <option ng-repeat="dealer in data.dealers" value="{{dealer.dealerid}}">{{dealer.dealer_name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                 
+                                    <select class="selectpicker" data-live-search="true"  data-width="100%" name="state" id="state" ng-model="filter.state_id" data-size="15" ng-change="onchange_filters();">
+                                        <option value="">State</option>
+                                        <option ng-repeat="state in data.states" value="{{state.stateid}}">{{state.state_name}}</option>
+                                    </select>
+
+
+                                </div>
+
+                                 
+                            </div>
+                        </div>
+                        <div class="col-md-1 positionRelative">
+                             <i class="fa fa-filter other-filter-icon disabled" title="Hide Other Filters" ng-show="otherFiltersActive" ng-click="otherFiltersActive = !otherFiltersActive" aria-hidden="true" style="left: -16px;"></i>
+                             <i class="fa fa-filter other-filter-icon" title="Show Other Filters" ng-show="!otherFiltersActive" ng-click="otherFiltersActive = !otherFiltersActive" aria-hidden="true" style="left: -16px;"></i>
+                            <input class="btn btn-danger" type="reset" ng-click="reset_filters();" value="Reset">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="ibox-content other-filters" ng-show="otherFiltersActive">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" id="zone" ng-model="filter.zone_id" data-size="15" ng-change="onchange_filters();">
+                                        <option value="">Zone</option>
+                                        <option ng-repeat="zone in data.zone" value="{{zone.zone_id}}">{{zone.zone_name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2"> 
+                                    <select class="selectpicker" data-live-search="true"  ng-disabled="is_gsm_disabled" data-width="100%" name="gsm" id="gsm" data-size="13"  ng-model="filter.gsm_id" ng-change="onchange_filters();">
+                                        <option value="" selected>GSM</option>
+                                        <option value="{{gsm.product_gsm_id}}" ng-repeat="gsm in data.gsm">{{gsm.gsm_value}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-live-search="true"  data-width="100%" id="brand" name="brand" data-size="13"  ng-model="filter.brand_id"  ng-change="onchange_filters();">
+                                        <option value="" selected>Brand</option>
+                                        <option value="{{brands.ku_product_id}}" ng-repeat="brands in data.brands">{{brands.ku_product_name}}</option>
+                                    </select>
+                                </div>
+
+
+
+
+
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" id="gsm_range_id" name="gsm_range_id" data-size="15"  ng-model="filter.gsm_range_id"  ng-change="onchange_filters();">
+                                        <option value="" selected>GSM Range</option>
+                                        <option value="{{gsmr.gsm_id}}" ng-repeat="gsmr in data.gsmrange">{{gsmr.gsm_range}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" id="nsrrange" name="nsrrange" data-size="15"  ng-model="filter.nsrrange"  ng-change="onchange_filters();">
+                                        <option value="" selected>NSR Range</option>
+                                        <option value="{{nsrr.nsr_range_id}},{{nsrr.min_range}},{{nsrr.max_range}}" ng-repeat="nsrr in data.nsrrange">{{nsrr.nsr_range}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="selectpicker" data-width="100%" id="dealertype" name="dealertype" data-size="15"  ng-model="filter.dealertype"  ng-change="onchange_filters();">
+                                        <option value="" selected>Dealer Type</option>
+                                        <option value="{{dtype.dealer_type}}" ng-repeat="dtype in data.dealertype">{{dtype.dealer_type}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class=" filter">
+            <div class="ibox" style="margin-bottom: 0px;">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label style="margin-left: 12px;">Proportionate</label>
+                            <div class="onoffswitch">
+                                <input type="checkbox" ng-model="filter.proportionate" class="onoffswitch-checkbox" id="proportionate" ng-change="onchange_filters()">
+                                <label class="onoffswitch-label" for="proportionate">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <label class="custom-control custom-radio" style="cursor: pointer;">
+                                        <input icheck checked="" type="radio" name="optradio" value="1" ng-model="filter.view_mode" ng-change="onchange_date_filters()" class="custom-control-input">
+                                        <span class="custom-control-description" style="font-weight: 500;">Monthly</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="custom-control custom-radio" style="cursor: pointer;">
+                                        <input icheck type="radio" name="optradio" value="2" ng-model="filter.view_mode" ng-change="onchange_date_filters()" class="custom-control-input">
+                                        <span class="custom-control-description" style="font-weight: 500;">Quarterly</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="custom-control custom-radio" style="cursor: pointer;">
+                                        <input icheck type="radio" name="optradio" value="3" ng-model="filter.view_mode" ng-change="onchange_date_filters()" class="custom-control-input">
+                                        <span class="custom-control-description" style="font-weight: 500;">Half-Yearly</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="custom-control custom-radio" style="cursor: pointer;">
+                                        <input icheck type="radio" name="optradio" value="4" ng-model="filter.view_mode" ng-change="onchange_date_filters()" class="custom-control-input">
+                                        <span class="custom-control-description" style="font-weight: 500;">Yearly</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="fixed-table-wrap">
+                <span class="child-loader" ng-show="loader_sales"><img class="loader-gif" src="assets/img/loading.svg" alt="Loading" /></span>
+                <div class="table-responsive data-filter">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="vertical_head_cols col-md-2"></th>
+                                <th class="col-md-3">
+                                    <div class="">
+                                        <a ng-show="prev_button_show" ng-click="comparePage('prev')" class="fa fa-arrow-circle-left fa-lg"></a>
+                                        <select data-width="fit" name="year1" ng-model="filter.previous_year" ng-change="onchange_filters();">
+                                            <option ng-repeat="year in financial_years" value="{{year}}">{{year + '-' + (year + 1 | limitTo:2:2 | number)}}</option>
+                                        </select>
+                                        <select data-width="fit" name="month1" ng-model="filter.previous_month" ng-change="onchange_filters();" ng-show="filter.view_mode == '1'">
+                                            <option value="1">Jan</option>
+                                            <option value="2">Feb</option>
+                                            <option value="3">Mar</option>
+                                            <option value="4">Apr</option>
+                                            <option value="5">May</option>
+                                            <option value="6">Jun</option>
+                                            <option value="7">Jul</option>
+                                            <option value="8">Aug</option>
+                                            <option value="9">Sep</option>
+                                            <option value="10">Oct</option>
+                                            <option value="11">Nov</option>
+                                            <option value="12">Dec</option>
+                                        </select>
+                                        <select data-width="fit" name="month1" ng-model="filter.previous_quater" ng-change="onchange_filters();" ng-show="filter.view_mode == '2'">
+                                            <option value="1">Q1</option>
+                                            <option value="2">Q2</option>
+                                            <option value="3">Q3</option>
+                                            <option value="4">Q4</option>
+                                        </select>
+                                        <select data-width="fit" name="month1" ng-model="filter.previous_half_year" ng-change="onchange_filters();" ng-show="filter.view_mode == '3'">
+                                            <option value="1">1st Half</option>
+                                            <option value="2">2nd Half</option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th class="col-md-3">
+                                    <div class="">
+                                        <select data-width="fit" name="year2" ng-model="filter.current_year" ng-change="onchange_filters();">
+                                            <option ng-repeat="year in financial_years" value="{{year}}">{{year + '-' + (year + 1 | limitTo:2:2 | number)}}</option>
+                                        </select>
+                                        <select data-width="fit" name="month2" ng-model="filter.current_month" ng-change="onchange_filters();" ng-show="filter.view_mode == '1'">
+                                            <option value="1">Jan</option>
+                                            <option value="2">Feb</option>
+                                            <option value="3">Mar</option>
+                                            <option value="4">Apr</option>
+                                            <option value="5">May</option>
+                                            <option value="6">Jun</option>
+                                            <option value="7">Jul</option>
+                                            <option value="8">Aug</option>
+                                            <option value="9">Sep</option>
+                                            <option value="10">Oct</option>
+                                            <option value="11">Nov</option>
+                                            <option value="12">Dec</option>
+                                        </select>
+                                        <select data-width="fit" name="month2" ng-model="filter.current_quater" ng-change="onchange_filters();" ng-show="filter.view_mode == '2'">
+                                            <option value="1">Q1</option>
+                                            <option value="2">Q2</option>
+                                            <option value="3">Q3</option>
+                                            <option value="4">Q4</option>
+                                        </select>
+                                        <select data-width="fit" name="" ng-model="filter.current_half_year" ng-change="onchange_filters();" ng-show="filter.view_mode == '3'">
+                                            <option value="1">1st Half</option>
+                                            <option value="2">2nd Half</option>
+                                        </select>
+                                        <a ng-show="next_button_show" ng-click="comparePage('next')" class="fa fa-arrow-circle-right fa-lg"></a>
+                                    </div>
+                                </th>
+                                <th class="vertical_head_cols col-md-2">Difference</th>
+                                <th class="vertical_head_cols col-md-2">Difference (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="side_head_cols">Quantity</td>
+                                <td ng-bind="sales.previous[0].quantity | CUSTOMNUMBER"></td>
+                                <td>{{sales.current[0].quantity| CUSTOMNUMBER }} </td>
+                                <td>
+                                    <a tooltip-placement="top" uib-tooltip="Quantity Difference Details" ng-class="sales.current[0].quantity_diff | POSITIVENEGATIVE : 'color'" ng-href="#/sales-detail/quantity">
+                                    {{ (sales.current[0].quantity_diff = sales.current[0].quantity - sales.previous[0].quantity) | CUSTOMNUMBER}} 
+                                    <i class="fa " ng-class="sales.current[0].quantity_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                </a>
+                                </td>
+                                <td date-valll="{{sales.current[0].quantity_per}}" ng-class="sales.current[0].quantity_per | POSITIVENEGATIVE : 'color'" ><span ng-bind="(sales.current[0].quantity_per = sales.current[0].quantity_diff / sales.previous[0].quantity) | percentage"></span><i class="fa " ng-class="sales.current[0].quantity_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="side_head_cols">Net Value</td>
+                                <td ng-bind-html="sales.previous[0].net_value | INR"> </td>
+                                <td ng-bind-html="sales.current[0].net_value | INR"></td>
+                                <td>
+                                    <a tooltip-placement="top" uib-tooltip="Net Value Difference Details " ng-class="sales.current[0].net_value_diff | POSITIVENEGATIVE : 'color'" ng-href="#/sales-detail/net-value">
+                                        <span ng-bind-html="(sales.current[0].net_value_diff = sales.current[0].net_value - sales.previous[0].net_value) | INR"></span>
+                                        <i class="fa " ng-class="sales.current[0].net_value_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </a>
+                                </td>
+                                <td ng-class="sales.current[0].net_value_per | POSITIVENEGATIVE : 'color'"><span ng-bind="(sales.current[0].net_value_per = sales.current[0].net_value_diff / sales.previous[0].net_value) | percentage"></span><i class="fa " ng-class="sales.current[0].net_value_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="side_head_cols">GSM</td>
+                                <td> {{ sales.previous[0].avg_gsm != null ? sales.previous[0].avg_gsm : '--' }} </td>
+                                <td> {{ sales.current[0].avg_gsm != null ? sales.current[0].avg_gsm : '--' }}</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td class="side_head_cols">Basic Rate</td>
+                                <td ng-bind-html="sales.previous[0].basic_rate | INR"></td>
+                                <td ng-bind-html="sales.current[0].basic_rate | INR"></td>
+                                <td ng-class="sales.current[0].basic_rate_diff | POSITIVENEGATIVE : 'color'">
+                                    <span ng-bind-html="(sales.current[0].basic_rate_diff = sales.current[0].basic_rate - sales.previous[0].basic_rate) | INR"></span>
+                                    <i class="fa " ng-class="sales.current[0].basic_rate_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                </td>
+                                <td ng-class="sales.current[0].basic_rate_per | POSITIVENEGATIVE : 'color'"><span ng-bind="(sales.current[0].basic_rate_per = sales.current[0].basic_rate_diff / sales.previous[0].basic_rate) | percentage"></span><i class="fa " ng-class="sales.current[0].basic_rate_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="side_head_cols">
+                                    <div><i style="cursor: pointer;" ng-click="toggleDiscount()" class="fa {{expandClass}}"></i> Discount </div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount">Special Discount</div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount">Trade Discount</div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount">Cash Discount</div>
+                                </td>
+                                <td>
+                                    <div ng-bind-html="sales.previous[0].avg_discount | INR"></div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-bind-html="sales.previous[0].avg_special_discount | INR"></div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-bind-html="sales.previous[0].avg_trade_discount | INR"></div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-bind-html="sales.previous[0].avg_cash_discount | INR"></div>
+                                </td>
+                                <td>
+                                    <div ng-bind-html="sales.current[0].avg_discount | INR"></div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-bind-html="sales.current[0].avg_special_discount | INR"></div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-bind-html="sales.current[0].avg_trade_discount | INR"></div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-bind-html="sales.current[0].avg_cash_discount | INR"></div>
+                                </td>
+                                <td>
+                                    <div ng-class="sales.current[0].avg_discount_diff | POSITIVENEGATIVE : 'color' : true">
+                                        <span ng-bind-html="(sales.current[0].avg_discount_diff = sales.current[0].avg_discount - sales.previous[0].avg_discount) | INR"></span>
+                                        <i class="fa " ng-class="sales.current[0].avg_discount_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-class="sales.current[0].avg_special_discount_diff | POSITIVENEGATIVE : 'color' : true">
+                                        <span ng-bind-html="(sales.current[0].avg_special_discount_diff = sales.current[0].avg_special_discount - sales.previous[0].avg_special_discount) | INR"></span>
+                                        <i class="fa " ng-class="sales.current[0].avg_special_discount_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-class="sales.current[0].avg_trade_discount_diff | POSITIVENEGATIVE : 'color' : true">
+                                        <span ng-bind-html="(sales.current[0].avg_trade_discount_diff = sales.current[0].avg_trade_discount - sales.previous[0].avg_trade_discount) | INR"></span>
+                                        <i class="fa " ng-class="sales.current[0].avg_trade_discount_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </div>
+                                    <div class="sub-discount animate-show" ng-show="expandDiscount" ng-class="sales.current[0].avg_cash_discount_diff | POSITIVENEGATIVE : 'color' : true">
+                                        <span ng-bind-html="(sales.current[0].avg_cash_discount_diff = sales.current[0].avg_cash_discount - sales.previous[0].avg_cash_discount) | INR"></span>
+                                        <i class="fa " ng-class="sales.current[0].avg_cash_discount_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-class="sales.current[0].avg_discount_per | POSITIVENEGATIVE : 'color' : true"><span ng-bind="(sales.current[0].avg_discount_per = sales.current[0].avg_discount_diff / sales.previous[0].avg_discount) | percentage"></span><i class="fa " ng-class="sales.current[0].avg_discount_per | POSITIVENEGATIVE : 'arrow'"></i></div>
+                                    
+                                    <div ng-class="sales.current[0].avg_special_discount_per | POSITIVENEGATIVE : 'color' : true" class="sub-discount animate-show" ng-show="expandDiscount"><span ng-bind="(sales.current[0].avg_special_discount_per = sales.current[0].avg_special_discount_diff / sales.previous[0].avg_special_discount) | percentage"></span><i class="fa " ng-class="sales.current[0].avg_special_discount_per | POSITIVENEGATIVE : 'arrow'"></i></div>
+                                    
+                                    <div ng-class="sales.current[0].avg_trade_discount_per | POSITIVENEGATIVE : 'color' : true" class="sub-discount animate-show" ng-show="expandDiscount"><span ng-bind="(sales.current[0].avg_trade_discount_per = sales.current[0].avg_trade_discount_diff / sales.previous[0].avg_trade_discount) | percentage"></span><i class="fa " ng-class="sales.current[0].avg_trade_discount_per | POSITIVENEGATIVE : 'arrow'"></i></div>
+                                    
+
+                                    <div ng-class="sales.current[0].avg_cash_discount_per | POSITIVENEGATIVE : 'color' : true" class="sub-discount animate-show" ng-show="expandDiscount" ><span ng-bind="(sales.current[0].avg_cash_discount_per = sales.current[0].avg_cash_discount_diff / sales.previous[0].avg_cash_discount) | percentage"></span><i class="fa " ng-class="sales.current[0].avg_cash_discount_per | POSITIVENEGATIVE : 'arrow'"></i></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="side_head_cols">Discount (%)</td>
+                                <td>{{sales.previous[0].avg_discount_percent ? sales.previous[0].avg_discount_percent+'%' : '--'}}</td>
+                                <td>{{sales.current[0].avg_discount_percent ? sales.current[0].avg_discount_percent+'%' : '--'}}</td>
+                                <td ng-class="sales.current[0].avg_discount_percent_diff | POSITIVENEGATIVE : 'color' : true">
+                                    <span ng-bind="(sales.current[0].avg_discount_percent_diff = sales.current[0].avg_discount_percent - sales.previous[0].avg_discount_percent) | number:2"></span>
+                                    <i class="fa " ng-class="sales.current[0].avg_discount_percent_diff < 0 ? 'fa-caret-down':'fa-caret-up'"></i>
+                                </td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td class="side_head_cols">NSR</td>
+                                <td ng-bind-html="sales.previous[0].nsr | INR"></td>
+                                <td ng-bind-html="sales.current[0].nsr | INR"></td>
+                                <td ng-class="sales.current[0].nsr_diff | POSITIVENEGATIVE : 'color'">
+                                  
+                                    <a tooltip-placement="top" uib-tooltip="NSR Difference Details"  ng-class="sales.current[0].nsr_diff | POSITIVENEGATIVE : 'color'"  ng-href="#/sales-detail/nsr">
+                                    <span ng-bind-html="(sales.current[0].nsr_diff = sales.current[0].nsr - sales.previous[0].nsr) | INR"></span>
+                                    <i class="fa " ng-class="sales.current[0].nsr_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </a>
+                                </td>
+                                <td ng-class="sales.current[0].nsr_per | POSITIVENEGATIVE : 'color'"><span ng-bind="(sales.current[0].nsr_per = sales.current[0].nsr_diff / sales.previous[0].nsr) | percentage"></span><i class="fa " ng-class="sales.current[0].nsr_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr ng-hide="loader_vc">
+                                <td class="side_head_cols positionRelative"><div><i ng-click="costIncluded = !costIncluded" style="cursor: pointer;" class="fa fa-info-circle" aria-hidden="true"></i> Cost</div></td>
+                                <td ng-bind-html="sales_vc.previous[0].variable_cost | INR"> </td>
+                                <td ng-bind-html="sales_vc.current[0].variable_cost | INR"></td>
+                                <td ng-class="sales_vc.current[0].cost_diff | POSITIVENEGATIVE : 'color' : true">
+                                    <span ng-bind-html="(sales_vc.current[0].cost_diff = sales_vc.current[0].variable_cost - sales_vc.previous[0].variable_cost) | INR"></span>
+                                    <i class="fa " ng-class="sales_vc.current[0].cost_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                </td>
+                                <td ng-class="sales_vc.current[0].cost_per | POSITIVENEGATIVE : 'color' : true"><span ng-bind="(sales_vc.current[0].cost_per = sales_vc.current[0].cost_diff / sales_vc.previous[0].variable_cost) | percentage"></span><i class="fa " ng-class="sales_vc.current[0].cost_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr ng-hide="loader_vc">
+                                <td class="side_head_cols positionRelative">Contribution</td>
+                                <td ng-bind-html="(sales.previous[0].contribution = sales.previous[0].nsr - sales_vc.previous[0].variable_cost) | INR"></td>
+                                <td ng-bind-html="(sales.current[0].contribution = sales.current[0].nsr - sales_vc.current[0].variable_cost) | INR"></td>
+                                <td ng-class="sales.current[0].contribution_diff | POSITIVENEGATIVE : 'color'">
+                                    <a tooltip-placement="top" uib-tooltip="Contribution Difference Details " ng-class="sales.current[0].contribution_diff | POSITIVENEGATIVE : 'color'" ng-href="#/sales-detail/contribution">    
+                                        <span ng-bind-html="(sales.current[0].contribution_diff = sales.current[0].contribution - sales.previous[0].contribution) | INR"></span>
+                                        <i class="fa " ng-class="sales.current[0].contribution_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                    </a>
+
+                                </td>
+                                <td ng-class="sales.current[0].contribution_per | POSITIVENEGATIVE : 'color'"><span ng-bind="(sales.current[0].contribution_per = sales.current[0].contribution_diff / sales.previous[0].contribution) | percentage"></span><i class="fa " ng-class="sales.current[0].contribution_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr ng-hide="loader_vc">
+                                <td class="side_head_cols positionRelative">Total Contribution</td>
+                                <td ng-bind-html="(sales.previous[0].total_contribution = sales.previous[0].contribution * sales.previous[0].quantity) | INR"></td>
+                                <td ng-bind-html="(sales.current[0].total_contribution = sales.current[0].contribution * sales.current[0].quantity) | INR"></td>
+                                <td ng-class="sales.current[0].total_contribution_diff | POSITIVENEGATIVE : 'color'">
+                                    <span ng-bind-html="(sales.current[0].total_contribution_diff = sales.current[0].total_contribution - sales.previous[0].total_contribution) | INR"></span>
+                                    <i class="fa " ng-class="sales.current[0].total_contribution_diff | POSITIVENEGATIVE : 'arrow'"></i>
+                                </td>
+                                <td ng-class="sales.current[0].total_contribution_per | POSITIVENEGATIVE : 'color'"><span ng-bind="(sales.current[0].total_contribution_per = sales.current[0].total_contribution_diff / sales.previous[0].total_contribution) | percentage"></span><i class="fa " ng-class="sales.current[0].total_contribution_per | POSITIVENEGATIVE : 'arrow'"></i></td>
+                            </tr>
+                            <tr ng-hide="loader_vc">
+                                <td class="side_head_cols positionRelative">Contribution (%)</td>
+                                
+                                <td data-test="{{sales.previous[0].contribution_percentage}}--{{sales.previous[0].contribution}}---{{sales.previous[0].nsr}}" >{{(sales.previous[0].contribution_percentage = sales.previous[0].contribution/sales.previous[0].nsr) | percentage }}</td>
+                                
+                                <td data-test="{{sales.current[0].contribution_percentage}}--{{sales.current[0].contribution}}---{{sales.current[0].nsr}}" >{{(sales.current[0].contribution_percentage = (sales.current[0].contribution/sales.current[0].nsr)) | percentage }}</td>
+
+                                <td ng-class="sales.current[0].contribution_percentage_diff | POSITIVENEGATIVE : 'color'">
+                                    <span ng-bind-html="(sales.current[0].contribution_percentage_diff = sales.current[0].contribution_percentage - sales.previous[0].contribution_percentage)| number:2"></span>
+                                    <i class="fa " ng-class="sales.current[0].contribution_percentage_diff < 0 ? 'fa-caret-down':'fa-caret-up'"></i>
+                                </td>
+                                <td>--</td>
+                            </tr>
+                            <tr ng-show="loader_vc">
+                                <td class="side_head_cols">Cost</td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-show="loader_vc">
+                                <td class="side_head_cols ">Contribution</td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-show="loader_vc">
+                                <td class="side_head_cols ">Total Contribution</td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-show="loader_vc">
+                                <td class="side_head_cols ">Contribution (%)</td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                                <td class="positionRelative">
+                                    <div id="circleG">
+                                        <div id="circleG_1" class="circleG"></div>
+                                        <div id="circleG_2" class="circleG"></div>
+                                        <div id="circleG_3" class="circleG"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+    <div class="custome-modal-draggable" style="top: 206px;left: 20px;" draggable ng-show="costIncluded">
+    <h3 class="popover-title">Cost Components <i ng-click="costIncluded = false" class="fa fa-times close-icon" aria-hidden="true"></i></h3>
+        <div class="custome-pop-body" style="overflow: auto; max-height: 244px;">
+            <div class="col-md-6">
+                <ul style="margin-left: -20px;">
+                    <li>Charcoal Consumed</li>
+                    <li>Chemical Consume</li>
+                    <li>Diesel Consumed (Boiler)</li>
+                    <li>Electricity Consuemed</li>
+                    <li>Fuel Consumed</li>
+                    <li>Furnace Oil Consumed</li>
+                    <li>Packing Material Consumed</li>
+
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul style="margin-left: -20px;">
+                    <li>Raw Material Consumed</li>
+                    <li>Salary & Wages</li>
+                    <li>Silica Sand Consumed</li>
+                    <li>Steam Coal Consumed</li>
+                    <li>Steam Coal High (Gcv)  Consumed</li>
+                    <li>Store Spare Consumed</li>
+                    <li>Wood Pulp Consumed</li>
+                </ul>
+            </div>
+        </div>
+        <div class="custome-pop-foot">
+            <a ng-click="costExcluded = !costExcluded" href="javascript:void(0);">Show Cost Excluded</a>
+        </div>
+    </div>
+    <div class="custome-modal-draggable" style="top: 206px;left: 520px;" draggable ng-show="costExcluded">
+           <h3 class="popover-title">Cost Excluded  <i ng-click="costExcluded = false" class="fa fa-times close-icon" aria-hidden="true"></i></h3>
+        <div class="custome-pop-body" style="overflow: auto; max-height: 244px;">
+            <div class="col-md-6">
+                <ul style="margin-left: -20px;">
+                    <li>Advertisement</li>
+                    <li>Audit Fee-other Capacity</li>
+                    <li>Auditors  out of Pocket Exp.</li>
+                    <li>Bagasse Handeling Exp.</li>
+                    <li>Bamboo Expences</li>
+                    <li>Bank Charges</li>
+                    <li>Bank Charges (Processing Fee)</li>
+                    <li>Bonus</li>
+                    <li>Building Repair</li>
+                    <li>Chemical Handelling Exp. (Crp)</li>
+                    <li>Chemical Purchase Exp</li>
+                    <li>Club Fee</li>
+                    <li>Commission to Directors</li>
+                    <li>Corporate Social Responsibility Exp</li>
+                    <li>Directors Trav.(Lodging & Boarding)</li>
+                    <li>Directors Travelling</li>
+                    <li>Donation</li>
+                    <li>Education Cess Availed</li>
+                    <li>Effluent Expenses</li>
+                    <li>Effluent Treatment Expenses</li>
+                    <li>Employer Contribution Esi</li>
+                    <li>Employer Contribution P.F.</li>
+                    <li>Ex-gratia</li>
+                    <li>Finance Lease/Oblieations</li>
+                    <li>Foreign Travelling</li>
+                    <li>Freight & Cartage on Sales</li>
+                    <li>Fuel Handling Exp.</li>
+                    <li>General Repair</li>
+                    <li>Gifts</li>
+                    <li>Gratuity Account</li>
+                    <li>Guest House Exp.</li>
+                    <li>Insurance</li>
+                    <li>Kahi Grass Exp.</li>
+                    <li>Kana Grass Exp.</li>
+                    <li>Kpl Ladies Club</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul style="margin-left: -20px;">
+                    <li>Leave Encashment (El)</li>
+                    <li>Legal & Professional Expenses</li>
+                    <li>Machienry Repair</li>
+                    <li>Medical Expenses</li>
+                    <li>Miscellaneous Expenses</li>
+                    <li>Motor Maintenance - Repairs</li>
+                    <li>Motor Maintenance - Running Exp</li>
+                    <li>News Paper Books & Periodicals</li>
+                    <li>Office and Administrative</li>
+                    <li>Packing Expenses</li>
+                    <li>Plantation Expenses</li>
+                    <li>Postage/Courier Expenses</li>
+                    <li>Printing & Stationary</li>
+                    <li>R & D Expenses</li>
+                    <li>Rate Fee & Taxes</li>
+                    <li>Raw Material Handling Expenses</li>
+                    <li>Recruitment Exp.</li>
+                    <li>Re-imbursement of Conveyance Exp.</li>
+                    <li>Re-imbursement of Medical Exp.</li>
+                    <li>Rent</li>
+                    <li>Roc Filing Fee</li>
+                    <li>Staff/Employee Welfare Exp</li>
+                    <li>Steam Coal Exp.</li>
+                    <li>Subscriptions</li>
+                    <li>Swachh Bharat Cess Payable</li>
+                    <li>Telephone Exenses</li>
+                    <li>Tractor/Loader Expenses</li>
+                    <li>Travelling Expenses</li>
+                    <li>Travelling(Lodging & Boarding)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+<div class="custom-fader" ng-show="costIncluded == true || costExcluded == true "></div>
+
+</div>
