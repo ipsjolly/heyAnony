@@ -1,5 +1,5 @@
 <ion-view view-title="Wall">
-    <ion-content ng-class="{expanded:$scope.isExpanded}"  >
+    <ion-content ng-class="{expanded:$scope.isExpanded}" class="header-top-margin" >
 <!--         <div class="hero slide-up" style="background-image: url('img/profile-bg.jpg');">
             <div class="content">
                 <div class="avatar" style="background-image: url('img/daenerys.jpg');"></div>
@@ -26,7 +26,7 @@
                     {{w[5]}} 
                     <p>
                         <a class="subdued 1" style="display: inline-block;"><i class="icon ion-female" ng-if="data.returnProfile(w).gender == 'Female'"></i><i class="icon ion-male" ng-if="data.returnProfile(w).gender == 'Male'"></i> {{w[2]}} of {{w[10]}}</a>
-                        <a class="subdued 2" style="display: inline-block;"><i class="icon ion-location"></i> {{w[4]}}, {{w[3]}}</a>
+                        <a class="subdued 2" style="display: inline-block;"><i class="icon ion-ios-location"></i> {{w[4]}}, {{w[3]}}</a>
                         <a class="subdued 3"  style="display: inline-block;"><i class="icon ion-android-time"></i>
                         <span class="timeago" title="{{w[9]}}">{{w[9]}}</span></a>
                     </p>

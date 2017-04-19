@@ -1,0 +1,77 @@
+<ion-side-menus enable-menu-with-back-views="true">
+    <ion-side-menu-content>
+        <ion-nav-bar class="bar-assertive-900 bar-calm" ng-show="data.showTopNav" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
+            <ion-nav-back-button class="no-text">
+            </ion-nav-back-button>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-android-more-vertical" menu-toggle="left">
+                </button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+
+
+
+
+  <div class="tabs-striped tabs-top tabs-background-white tabs-color-light" ng-show="data.tabsvisible">
+    <div class="tabs">
+      <a class="tab-item ink" ng-class="{'active':data.pagename == 'wall'}" ng-click="data.goto('/app/wall');">
+        <i class="icon ion-earth"></i>
+        <span class="top-bar-text">Wall</span>
+      </a>
+      <a class="tab-item ink" ng-class="{'active':data.pagename == 'post'}" ng-click="data.goto('/app/post');">
+        <i class="icon ion-speakerphone"></i>
+        <span class="top-bar-text">Post Status</span>
+      </a>
+      <a class="tab-item ink" ng-class="{'active':data.pagename == 'messages'}" ng-click="data.goto('/app/messages');">
+        <i class="icon ion-chatbubbles"></i>
+        <span class="top-bar-text">Messages</span>
+      </a>
+      <a class="tab-item ink" ng-class="{'active':data.pagename == 'profile'}" ng-click="data.goto('/app/profile');">
+        <i class="icon ion-gear-a"></i>
+        <span class="top-bar-text">Profile</span>
+      </a>
+    </div>
+  </div>
+
+
+
+
+        <ion-nav-view name="fabContent"></ion-nav-view>
+        <ion-nav-view name="menuContent" ng-class="{expanded: isExpanded}" ></ion-nav-view>
+
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+        <ion-header-bar class="expanded">
+            <span class="avatar" style="background: url('img/hey_icon3.png'); background-size: cover;"></span>
+            <h2 class="side-bar-header">hay! anony</h2>
+        </ion-header-bar>
+        <ion-content class="stable-bg has-expanded-header">
+            <ion-list class="sidebar-section">
+                <ion-item nav-clear menu-close ui-sref="app.profile" class="ink" ng-class="{'active':data.pagename == 'profile'}">
+                    <i class="icon ion-android-happy"></i> Profile
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.post" class="ink"  ng-class="{'active':data.pagename == 'post'}">
+                    <i class="icon ion-speakerphone"></i> Post Status
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.wall" class="ink"  ng-class="{'active':data.pagename == 'wall'}">
+                    <i class="icon ion-earth"></i> Wall
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.messages" class="ink"  ng-class="{'active':data.pagename == 'messages'}">
+                    <i class="icon ion-chatbubbles"></i> Messages
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.filter" class="ink"  ng-class="{'active':data.pagename == 'profile'}">
+                    <i class="icon ion-gear-a"></i> Settings
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.filter" class="ink"  ng-class="{'active':data.pagename == 'about'}">
+                    <i class="icon ion-alert"></i> About
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.filter" class="ink"  ng-class="{'active':data.pagename == 'invite'}">
+                    <i class="icon ion-heart"></i> Invite People
+                </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.filter" class="ink"  ng-class="{'active':data.pagename == 'feedback'}">
+                    <i class="icon ion-edit"></i> Feedback 
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>

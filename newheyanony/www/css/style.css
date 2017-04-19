@@ -30,8 +30,12 @@ p {
     transition: all .5s ease-in-out;
 }
 
+.side-bar-header{
+  color: #ffffff;
+}
+
 .menu-open .bar.bar-header.expanded {
-    background-color: #222;
+    background-color: #92ceff;
 }
 
 .menu h2 {
@@ -237,4 +241,102 @@ span.msgtxt {
     -webkit-transform: translate3d(130px, 0, 0) !important;
     -moz-transform: translate3d(130px, 0, 0) !important;
     transform: translate3d(130px, 0, 0) !important;
+}
+
+
+span.card-heading {
+    
+}
+span.card-body {
+    
+    font-weight: bold;
+}
+.span-select{
+    font-weight: bold;
+}
+
+.header-top-margin{
+  top: 95px!important;
+}
+.sidebar-section .item-content{
+  color: #313233;
+}
+
+
+.tabs-striped.tabs-background-white .tabs {
+    background-color: #ffffff;
+    background-image: none;
+}
+.tabs-background-white .tab-item .icon{
+ color:#C8CDD3;
+}
+.tabs-background-white .tab-item.active .icon{
+ color:#5F97FF;
+}
+/*.tabs-background-white .tab-item.active{
+    border: 3px solid #5F97FF!important;
+}
+.tabs-background-white .tab-item.active.activated{
+     margin-top: 0px!important;
+}*/
+
+.pane, .view {
+    background-color: #F5F5F5;
+}
+  
+.stable-bg{
+background-color: #FFFFFF!important;
+}
+
+.sidebar-section .icon {
+    font-size: 25px;
+    vertical-align: middle;
+    margin-right: 10px;
+    min-width: 27px;
+    display: inline-block;
+    text-align: center;
+    color: #4a5b82;
+}
+
+.list .item-body .icon{
+    font-size: 16px;
+    vertical-align: middle;
+    display: inline-flex;
+}
+
+.list .item-body .ion-male.icon{
+  color:#10B6E4;
+}
+.list .item-body .ion-female.icon{
+  color:#E410A4;
+}
+.list .item-body .ion-android-time{
+  color:#E4B310;
+}
+.list .item-body .ion-location,.list .item-body .ion-map,.list .item-body .ion-ios-location{
+  color:#55C10E;
+}
+.list .ion-chatbubble-working{
+  color:#EC6262;
+}
+.list .ion-ios-information{
+  color:#8A8D91;
+}
+.tab-item{
+  opacity: 1;
+}
+
+
+.backdrop {
+    display: none;
+}
+
+.loading-container .loading {
+     padding: 0px;
+    border-radius: 7px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.loader {
+    zoom: 0.7;
 }

@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope,$location, $http, $rootScope, $ionicModal, $ionicPopover, $timeout, $cordovaToast, localStorageService) {
+.controller('AppCtrl', function($scope,$location, $http, $rootScope,httpPreConfig,$ionicLoading, $ionicModal, $ionicPopover, $timeout, $cordovaToast, localStorageService) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -11,6 +11,31 @@ angular.module('starter.controllers', [])
     $scope.hasHeaderFabRight = false;
     $scope.enableToast = false;
     $rootScope.data = [];
+    $rootScope.data.tabsvisible = true;
+    $rootScope.data.pagename = "";
+    $scope.$on('$viewContentLoaded', function(event, toState, toParams, fromState, fromParams){
+         $rootScope.data.tabsvisible = toState.tabsvisible;
+        $rootScope.data.pagename = toState.pagename;
+    });
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        $rootScope.data.tabsvisible = toState.tabsvisible;
+        $rootScope.data.pagename = toState.pagename;
+    });
+
+  
+    $scope.$on('httpCallStarted', function(e) {
+        $ionicLoading.show({
+                    template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="10" stroke-miterlimit="10"></circle></svg></div>'
+        });
+    });
+    $scope.$on('httpCallStopped', function(e) {
+       //$timeout(function() {
+            $ionicLoading.hide();
+        //}, 300);
+    });
+
+
+
     $rootScope.data.goto = function(path){
         $location.path(path);
     }
@@ -180,14 +205,14 @@ angular.module('starter.controllers', [])
     }, 0);
     ionicMaterialInk.displayEffect();
     $ionicSideMenuDelegate.canDragContent($state.current.showSideMenu);
-
+    $rootScope.data.tabsvisible = false;
 
     $scope.loginRegister = function() {
         var urn = "ipsjolly"; //$.trim($scope.data.username).toLowerCase();
         var pas = "reaction9"; //$.trim($scope.data.password);
         if (!urn.length) {
             if ($scope.enableToast)
-                $scope.showToast("Enter Username!", 'long', 'bottom');
+            $scope.showToast("Enter Username!", 'long', 'bottom');
 
 
             //alert("Enter Username!");
@@ -199,6 +224,7 @@ angular.module('starter.controllers', [])
             return false;
         } else {
 
+alert(path + '/master.php');
                     $http({
                         method: "GET",
                         url: path + '/master.php',
@@ -217,6 +243,7 @@ angular.module('starter.controllers', [])
                         }
                     }, function myError(response) {
                         console.log(response);
+                        alert(path + '/master.php');
                         alert("Oops, there was an error while registering/signing in. Sorry about that.");
                     });
 
@@ -334,10 +361,12 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('PostCtrl', function($scope, $http, $rootScope, $ionicPopup, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
+.controller('PostCtrl', function($scope, $http, $rootScope, $state, $ionicPopup, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
     console.log($rootScope.data.usersession);
     $rootScope.data.myid = localStorage.getItem("userid");
     $scope.allPostedStatus = [];
+
+    $rootScope.data.pagename = $state.current.pagename;
     $scope.getAllPosts = function() {
         $http({
             method: "GET",
@@ -462,7 +491,7 @@ angular.module('starter.controllers', [])
             }
         }
     })
-    .controller('WallCtrl', function($scope, $interval, $rootScope, $http, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicScrollDelegate) {
+    .controller('WallCtrl', function($scope, $interval, $rootScope, $state, $http, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, $ionicScrollDelegate) {
         // Set Header
         // $scope.$parent.showHeader();
         // $scope.$parent.clearFabs();
@@ -472,8 +501,8 @@ angular.module('starter.controllers', [])
         $rootScope.data.myid = localStorage.getItem("userid");
         $interval.cancel($rootScope.data.checkMsgIntervelObj);
         $rootScope.data.isLoadingNext = false;
-
-
+        $rootScope.data.tabsvisible = true;
+        $rootScope.data.pagename = $state.current.pagename;
         $rootScope.data.returnProfile = function(obj) {
             var bio = [];
             if (obj[6] == 'f') {
@@ -727,10 +756,11 @@ angular.module('starter.controllers', [])
 
 
 
-    }).controller('ProfileCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
+    }).controller('ProfileCtrl', function($scope, $interval ,$state, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
         $rootScope.data.myid = localStorage.getItem("userid");
 
+        $rootScope.data.pagename = $state.current.pagename;
         $scope.getMyProfile = function() {
             $http({
                 method: "GET",
@@ -851,11 +881,13 @@ angular.module('starter.controllers', [])
 
 
 
-    }).controller('MessagesCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
+    }).controller('MessagesCtrl', function($scope, $interval,$state, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
         $rootScope.data.myid = localStorage.getItem("userid");
         $scope.allMessages = [];
         $scope.showMsgType = 'resc';
+
+        $rootScope.data.pagename = $state.current.pagename;
         $scope.loadMessages = function(msgtype){
             $scope.showMsgType = msgtype;
                     $http({
@@ -929,4 +961,14 @@ angular.module('starter.controllers', [])
         };
         $scope.getAllPosts();
 
+    }).factory('httpPreConfig', ['$http', '$rootScope', function($http, $rootScope) {
+    $http.defaults.transformRequest.push(function (data) {
+        $rootScope.$broadcast('httpCallStarted');
+        return data;
     });
+    $http.defaults.transformResponse.push(function(data){ 
+        $rootScope.$broadcast('httpCallStopped');
+        return data;
+    })
+    return $http;
+}]);

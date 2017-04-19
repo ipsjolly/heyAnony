@@ -55,45 +55,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         }
     })
 
-    .state('app.friends', {
-        url: '/friends',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/friends.html',
-                controller: 'FriendsCtrl'
-            },
-            'fabContent': {
-                template: '<button id="fab-friends" class="button button-fab button-fab-top-left expanded button-energized-900 spin"><i class="icon ion-chatbubbles"></i></button>',
-                controller: function ($timeout) {
-                    $timeout(function () {
-                        document.getElementById('fab-friends').classList.toggle('on');
-                    }, 900);
-                }
-            }
-        }
-    })
-
-    .state('app.gallery', {
-        url: '/gallery',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/gallery.html',
-                controller: 'GalleryCtrl'
-            },
-            'fabContent': {
-                template: '<button id="fab-gallery" class="button button-fab button-fab-top-right expanded button-energized-900 drop"><i class="icon ion-heart"></i></button>',
-                controller: function ($timeout) {
-                    $timeout(function () {
-                        document.getElementById('fab-gallery').classList.toggle('on');
-                    }, 600);
-                }
-            }
-        }
-    })
-
     .state('app.login', {
         url: '/login',
+        pagename:'login',
         showSideBar:false,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/login.html',
@@ -107,7 +73,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     .state('app.chat', {
         url: '/chat',
+        pagename:'chat',
         showSideBar:true,
+        tabsvisible:false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/chat.html',
@@ -121,7 +89,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     .state('app.post', {
         url: '/post',
+        pagename:'post',
         showSideBar:true,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/post.html',
@@ -140,7 +110,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     .state('app.profile', {
         url: '/profile',
+        pagename:'profile',
         showSideBar:true,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/profile.html',
@@ -158,7 +130,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     })
     .state('app.filter', {
         url: '/filter',
+        pagename:'filter',
         showSideBar:true,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/filter.html',
@@ -177,6 +151,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     .state('app.wall', {
         url: '/wall',
+        pagename:'wall',
+        showSideBar:true,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/wall.html',
@@ -198,6 +175,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     .state('app.messages', {
         url: '/messages',
+        pagename:'messages',
+        showSideBar:true,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/messages.html',
@@ -218,6 +198,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     })
     .state('app.aboutuser', {
         url: '/aboutuser',
+        pagename:'aboutuser',
+        showSideBar:true,
+        tabsvisible:true,
         views: {
             'menuContent': {
                 templateUrl: 'templates/aboutuser.html',

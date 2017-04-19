@@ -1,0 +1,62 @@
+<ion-view view-title="Messages">
+    <ion-content  class="header-top-margin">
+  
+
+            <div class="tabs-striped tabs-color-assertive" style="position: static; margin-bottom: 15px;margin-top: 15px;">
+                <div class="tabs tabs-icon-top" style="position: static;">
+                    <a class="tab-item"  ng-class="{active: showMsgType == 'resc'}"  ng-click="loadMessages('resc')" data-ink-color="#ef473a" data-ink-opacity=".35">
+                        <i class="icon ion-chatbox-working"></i> Received
+                    </a>
+                    <a class="tab-item"  ng-class="{active: showMsgType == 'sent'}"  ng-click="loadMessages('sent')" data-ink-color="#ef473a" data-ink-opacity=".35">
+                        <i class="icon ion-paper-airplane"></i> Sent
+                    </a>
+                </div>
+            </div>
+<!-- <ion-list class="animate-fade-slide-in card stable-bg"  ng-repeat="w in allMessages">
+    <ion-item nav-clear menu-close class="item-icon-right item-avatar">
+        <img src="img/material4.jpg">
+        <h2>List title</h2>
+        <p>List description</p>
+        <i class="icon ion-chatbubble muted"></i>
+    </ion-item>
+
+
+
+
+
+
+
+
+</ion-list> -->
+
+ <ion-list>
+
+            <ion-item class="animate-fade-slide-in custom-item-gredient" ng-repeat="w in allMessages  track by $index">
+
+                <div class="item item-body">
+                    <div class="wall-status-text">"{{w[5]}}"</div> 
+                    <p>
+                        <a class="subdued 1" style="display: inline-block;"><i class="icon ion-female" ng-if="data.returnProfile(w).gender == 'Female'"></i><i class="icon ion-male" ng-if="data.returnProfile(w).gender == 'Male'"></i> {{w[4]}}</a>
+                        <!-- <a class="subdued 2" style="display: inline-block;"><i class="icon ion-location"></i> {{w[4]}}, {{w[3]}}</a> -->
+                        <a class="subdued 3"  style="display: inline-block;"><i class="icon ion-android-time"></i>
+                        <span class="timeago" title="{{w[7]}}">{{w[7]}}</span></a>
+                    </p>
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-top">
+                    <a class="tab-item ink" ng-click="delConfirm(p[0])" data-ink-color="#336699" data-ink-opacity="0.5">
+                        <i class="icon ion-android-delete"></i> Remove
+                    </a>
+                    <a class="tab-item ink" ng-click="data.openChat(w[0])" data-ink-color="#336699" data-ink-opacity="0.5">
+                        <i class="icon ion-chatbubble-working"></i>Message
+                    </a>
+                    <a class="tab-item ink" ng-click="data.setOtherUser(w[1]);data.goto('/app/aboutuser');" data-ink-color="#336699" data-ink-opacity="0.5">
+                        <i class="icon ion-ios-information"></i>Profile
+                    </a>
+                </div>
+            </ion-item>
+
+
+ </ion-list>
+
+    </ion-content>
+</ion-view>

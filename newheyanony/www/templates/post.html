@@ -1,7 +1,7 @@
 <ion-view view-title="Post">
-    <ion-content  scroll="false">
+    <ion-content   class="header-top-margin">
   
-        <div class="list" style="width: 100%; height: 20%" >
+        <div class="list" style="width: 100%; " >
           <label class="item item-input item-floating-label">
             <span class="input-label">Write Your Mind!</span>
             <textarea id="newAdMessage"  placeholder="Write Your Mind!"></textarea>
@@ -20,7 +20,7 @@
                     <i class="icon ion-chatbubble muted"></i>
                 </span>
             </div> -->
-<ion-scroll direction="y"  style="width: 100%; height: 80%" >
+<!-- <ion-scroll direction="y"  style="width: 100%; height: 80%" > -->
             <div class="list card stable-bg" ng-repeat="p in allPostedStatus">
                 <div class="item item-body">
                     {{p[5]}}
@@ -36,7 +36,7 @@
                     </a>
                 </div>
             </div>
-</ion-scroll>
+<!-- </ion-scroll> -->
 
     </ion-content>
 </ion-view>
