@@ -57,6 +57,24 @@ gulp.task('template', function(done){
     .pipe(templateCache({
         standalone:true,
         root: 'templates'}))
-    .pipe(gulp.dest('./public'))
+    .pipe(gulp.dest('./www/dist'))
     .on('end', done);
+});
+
+
+var ngAnnotate = require('gulp-ng-annotate');
+var useref = require('gulp-useref');
+var uglify = require("gulp-uglify");
+gulp.task('html', function (done) {
+  return gulp.src('./www/*.html')
+        .pipe(useref())
+        .pipe(gulp.dest('./www/dist'));
+});
+
+gulp.task('uglify', function() {
+  gulp.src('./www/js/*.js')
+    .pipe(uglify('ugly.js', {
+      outSourceMap: true
+    }))
+    .pipe(gulp.dest('./www/dist'))
 });
