@@ -1,0 +1,36 @@
+<ion-view view-title="Filter">
+    <ion-content>
+        <ion-list class="">
+            <div class="notificationIcon"></div>
+            <div class="alertMsgWrap">
+                <button class="button button-block button-assertive alertMsg"></button>
+            </div>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Show me only
+                </div>
+                <select class="searchFilterToView" id="selectGenderToSee">
+                    <option selected="" value="">Everyone</option>
+                    <option value="mf">Men who like women</option>
+                    <option value="mm">Men who like men</option>
+                    <option value="fm">Women who like men</option>
+                    <option value="ff">Women who like women</option>
+                    <option value="m ">Men who like both</option>
+                    <option value="f ">Women who like both</option>
+                </select>
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Country
+                </div>
+                <select class="searchFilterToView" id="selectCountryToSeeFrom" ng-model="data.selectedFilterCountry">
+                    <option selected="" value="">Planet Earth</option>
+                    <option value="{{country[1]}}" ng-repeat="country in data.allCountries">{{country[2]}}</option>
+                </select>
+            </label>
+            <button id="updateWall" class="button button-block button-positive">
+                Update Wall
+            </button>
+        </ion-list>
+    </ion-content>
+</ion-view>

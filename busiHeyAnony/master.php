@@ -47,7 +47,7 @@ $sn = $_REQUEST['sn'];
 $gm = $_REQUEST['gm'];
 $usr = $_REQUEST['user'];
 
-$query = "UPDATE tbl_urs SET country = '$cn', state = '$sn', iam = '$mg', ilike = '$yg', age = '$gm' WHERE usernm = '$usr'";
+$query = "UPDATE tbl_urs SET country = '$cn', state = '$sn', iam = '$mg', ilike = '$yg', age = '$gm' WHERE pk_id = '$usr'";
 mysqli_query($con,$query) or die(mysqli_error());
 echo 1;
 }else if($type == "getstype"){
@@ -261,7 +261,7 @@ $msgtype = $_REQUEST['msgtype'];
 
 if($msgtype == 'sent'){
 //Sent	
-$query = "SELECT * FROM tbl_primessages Where frmid = '$usr' GROUP BY toid ORDER BY timestemp DESC";	
+$query = "SELECT * FROM tbl_primessages Where frmid = '$usr' GROUP BY toid ORDER BY timestemp DESC";
 
 }else if($msgtype == 'resc'){
 //Recieved 
@@ -283,7 +283,7 @@ while($row=mysqli_fetch_row($result)){
 
  
 } else{
-echo '[["","00001","","","",""]]';
+echo '[]';
 }
 
 

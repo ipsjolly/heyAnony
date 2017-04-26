@@ -121,7 +121,7 @@ $stable:                          #f8f8f8 !default;
   -webkit-align-items: center !important;
   -ms-flex-align: center !important;
   align-items: center !important;
-  margin-bottom: 20px !important;
+  /*margin-bottom: 20px !important;*/
   .message {
     -webkit-box-flex: 1 !important;
     -moz-box-flex: 1 !important;
@@ -185,7 +185,7 @@ $stable:                          #f8f8f8 !default;
     -webkit-flex: 1 1 auto !important;
     -ms-flex: 1 1 auto !important;
     flex: 1 1 auto !important;
-    padding: 10px !important;
+    padding: 5px 15px !important;
     -webkit-transition: all 250ms ease-in-out !important;
     transition: all 250ms ease-in-out !important;
     overflow: hidden !important;
@@ -204,12 +204,36 @@ span.msgtxt {
     text-align: left !important;
     max-width: 240px !important;
 }
+.messages.other span.msgtxt .timeago {
+    font-size: 12px;
+    float: right;
+    color: darkgrey;
+}
+.messages.mine span.msgtxt .timeago {
+    font-size: 12px;
+    float: left;
+    color: #e0dfdf;
+}
 .messages.other span.msgtxt {
     color: black !important;
-    background-color: #C7C7CC !important;
+    background-color: #e6edf3 !important;
+    font-size: 18px;
+    line-height: 22px;
+}
+.messages.mine span.msgtxt {
+    color: white !important;
+    background-color: #0089ff !important;
+    font-size: 18px;
+    line-height: 22px;
 }
 
 .messages.other .message.slide-right {
+    -webkit-transform: translate3d(120px, 0, 0) !important;
+    -moz-transform: translate3d(120px, 0, 0) !important;
+    transform: translate3d(120px, 0, 0) !important;
+}
+
+.messages .message.slide-right {
     -webkit-transform: translate3d(120px, 0, 0) !important;
     -moz-transform: translate3d(120px, 0, 0) !important;
     transform: translate3d(120px, 0, 0) !important;
@@ -249,20 +273,25 @@ span.msgtxt {
 
 
 span.card-heading {
-    
+       font-size: 15px;
+    line-height: 15px;
+    color: #4C4E50;
 }
 span.card-body {
-    
     font-weight: bold;
 }
-.span-select{
-    font-weight: bold;
+.span-select {
+    font-size: 20px;
+    line-height: 23px;
+    color: #4C4E50;
 }
+
+
 
 .header-top-margin{
   top: 95px!important;
   padding: 16px!important;
-  background-color: rgba(200, 205, 211, 0.38);
+  /*background-color: rgba(200, 205, 211, 0.38);*/
 }
 .sidebar-section .item-content{
   color: #737373;
@@ -341,7 +370,7 @@ background-color: #FFFFFF!important;
 .loading-container .loading {
      padding: 0px;
     border-radius: 7px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .loader {
@@ -420,8 +449,8 @@ background-color: #FFFFFF!important;
 }
 
 .list .item.item-body .wall-status-text {
-    font-size: 25px;
-    line-height: 28px;
+       font-size: 20px;
+    line-height: 23px;
     color: #4C4E50;
 }
 
@@ -459,6 +488,11 @@ button.custom-btn {
 .popup-container .popup {
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.56);
+    element.style {
+    -webkit-box-shadow: 5px 5px 49px -9px #000;
+    -moz-box-shadow:5px 5px 49px -9px #000;
+    box-shadow: 5px 5px 49px -9px #000;
+}
 }
 .popup-container .popup-head{
   border: none;
@@ -495,7 +529,7 @@ button.custom-btn {
 .custom-item-gredient .tab-item .icon ,.custom-item-gredient-m .tab-item .icon ,.custom-item-gredient-f .tab-item .icon {
     display: block;
     margin: 0 auto;
-    height: 25px;
+    height: 26px;
     font-size: 25px;
 }
 
@@ -510,6 +544,11 @@ button.custom-btn {
     border-radius: 62px;
     text-transform: none;
 }
+
+
+
+
+
 
 .icon-spin {
     position: absolute;
@@ -572,48 +611,47 @@ button.custom-btn {
 /*custom item bg*/
 
 .custom-item-gredient{
-/*background: #ffffff;
-background: -moz-linear-gradient(left, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-background: -webkit-gradient(left top, right top, color-stop(0%, #ffffff), color-stop(47%, #f6f6f6), color-stop(100%, #ededed));
-background: -webkit-linear-gradient(left, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-background: -o-linear-gradient(left, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-background: -ms-linear-gradient(left, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-background: linear-gradient(to right, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=1 );*/
-
-background: #ffffff;
-background: -moz-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
-background: -webkit-gradient(left top, right top, color-stop(0%, #ffffff), color-stop(26%, #f7f9fa), color-stop(88%, #f2f2f2), color-stop(100%, #d8dadb));
-background: -webkit-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
-background: -o-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
-background: -ms-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
-background: linear-gradient(to right, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d8dadb', GradientType=1 );
-margin-bottom: 20px;
+ background: #ffffff;
+    background: -moz-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, #ffffff), color-stop(26%, #f7f9fa), color-stop(88%, #f2f2f2), color-stop(100%, #d8dadb));
+    background: -webkit-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
+    background: -o-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
+    background: -ms-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 88%, #d8dadb 100%);
+    background: linear-gradient(to right, #ffffff 0%, #ffffff 26%, #ffffff 88%, #d8dadb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d8dadb', GradientType=1 );
+    margin-bottom: 20px;
 }
 
 .custom-item-gredient-m{
 
 background: #ffffff;
+
 background: -moz-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #e2f4fc 100%);
+
 background: -webkit-gradient(left top, right top, color-stop(0%, #ffffff), color-stop(26%, #f7f9fa), color-stop(66%, #f2f2f2), color-stop(100%, #e2f4fc));
+
 background: -webkit-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #e2f4fc 100%);
+
 background: -o-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #e2f4fc 100%);
+
 background: -ms-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #e2f4fc 100%);
-background: linear-gradient(to right, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #e2f4fc 100%);
+
+background: linear-gradient(to right, #ffffff 0%, #ffffff 26%, #ffffff 66%, #e2f4fc 100%);
+
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e2f4fc', GradientType=1 );
+
 margin-bottom: 20px;
 }
 .custom-item-gredient-f{
-background: #ffffff;
-background: -moz-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
-background: -webkit-gradient(left top, right top, color-stop(0%, #ffffff), color-stop(26%, #f7f9fa), color-stop(66%, #f2f2f2), color-stop(100%, #fae1f8));
-background: -webkit-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
-background: -o-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
-background: -ms-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
-background: linear-gradient(to right, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fae1f8', GradientType=1 );
-margin-bottom: 20px;
+    background: #ffffff;
+    background: -moz-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, #ffffff), color-stop(26%, #f7f9fa), color-stop(66%, #f2f2f2), color-stop(100%, #fae1f8));
+    background: -webkit-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
+    background: -o-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
+    background: -ms-linear-gradient(left, #ffffff 0%, #f7f9fa 26%, #f2f2f2 66%, #fae1f8 100%);
+    background: linear-gradient(to right, #ffffff 0%, #ffffff 26%, #ffffff 66%, #fae1f8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fae1f8', GradientType=1 );
+    margin-bottom: 20px;
 }
 
 .loadPostPrevFrom .custom-item-gredient,.loadPostPrevFrom .custom-item-gredient-m,.loadPostPrevFrom .custom-item-gredient-f{

@@ -1,10 +1,10 @@
 <ion-view view-title="Wall" >
     
     <ion-content ng-class="{expanded:$scope.isExpanded}" class="header-top-margin loadPostPrevFrom" >
-
-             <ion-list>
+<ion-refresher on-refresh="loadPersonData('', '', '', '', '', '')"></ion-refresher>
+             <ion-list class="animate-fade-slide-in">
             
-            <ion-item class="animate-fade-slide-in ink" ng-class="itemWallClass(w)" ng-repeat="w in data.wallList track by $index">
+            <ion-item class="" ng-class="itemWallClass(w)" ng-repeat="w in data.wallList track by $index">
                 <div class="item item-body">
                     <div class="wall-status-text">{{::w[5]}}</div> 
                     <p>
@@ -14,9 +14,9 @@
                         <span class="timeago" title="{{::w[9]}}">{{::w[9]}}</span></a>
                     </p>
                 </div>
-                <div  ng-if="w[1] != data.myid" class="item tabs tabs-secondary tabs-icon-top">
+                <div  ng-if="w[1] != data.usersession[0]" class="item tabs tabs-secondary tabs-icon-top">
                     
-                    <a class="tab-item ink" ng-click="data.openChat(w[0])" >
+                    <a class="tab-item ink" ng-click="data.openChat(w[1])" >
                         <i class="icon ion-chatbubble-working"></i>Message
                     </a>
                     <a class="tab-item ink" ng-click="data.setOtherUser(w[1]);data.goto('/app/aboutuser');" >

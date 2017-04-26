@@ -18,35 +18,48 @@ var waitForFinalEvent = (function() {
 
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $location, $stateParams, $http, $rootScope, httpPreConfig, $ionicLoading, $ionicModal, $ionicPopover, $timeout, $cordovaToast, localStorageService) {
+.controller('AppCtrl', function($scope, $state, $location, $stateParams, $http, $rootScope, httpPreConfig, $ionicLoading, $ionicModal, $ionicPopover, $ionicPopup, $timeout, $cordovaToast, localStorageService, $ionicScrollDelegate, $interval, $ionicPlatform) {
     // Form data for the login modal
     $scope.loginData = {};
     // $scope.isExpanded = false;
     // $scope.hasHeaderFabLeft = false;
     // $scope.hasHeaderFabRight = false;
-    $scope.enableToast = false;
+    console.log("00000---" + ionic.Platform.isAndroid());
+
+    $scope.enableToast = ionic.Platform.isAndroid();
     $rootScope.data = [];
     $scope.alreadyLogged = false;
     $rootScope.data.username = "";
     $rootScope.data.tabsvisible = true;
     $rootScope.data.pagename = "";
+    $rootScope.data.currentPage = "";
     $rootScope.data.showTopNav = false;
+    $rootScope.data.isChatVisible = false;
     $scope.$on('$viewContentLoaded', function(event, toState, toParams, fromState, fromParams) {
         $rootScope.data.tabsvisible = toState.tabsvisible;
         $rootScope.data.pagename = toState.pagename;
         $rootScope.data.showTopNav = toState.showTopNav;
+
     });
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
         $rootScope.data.tabsvisible = toState.tabsvisible;
         $rootScope.data.pagename = toState.pagename;
         $rootScope.data.showTopNav = toState.showSideBar;
+
+
+    });
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        $rootScope.data.checkIfInfoFilled();
+        $rootScope.data.currentPage = toState.pagename;
     });
 
 
     $scope.$on('httpCallStarted', function(e) {
-        $ionicLoading.show({
-            template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="10" stroke-miterlimit="10"></circle></svg></div>'
-        });
+        if (!$rootScope.data.isChatVisible) {
+            $ionicLoading.show({
+                template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle></svg></div>'
+            });
+        }
     });
     $scope.$on('httpCallStopped', function(e) {
         //$timeout(function() {
@@ -54,23 +67,16 @@ angular.module('starter.controllers', [])
         //}, 300);
     });
 
+    $scope.itemWallClass = function(obj) {
+        if (obj[6] == 'm') {
+            return "custom-item-gredient-m";
+        } else if (obj[6] == 'f') {
+            return "custom-item-gredient-f";
+        } else {
+            return "custom-item-gredient";
+        }
+    }
 
-    //  $scope.$on('$viewContentLoaded', function(){
-
-    // });
-
-    // $scope.$on("$ionicView.beforeEnter", function(event, data, toState){
-    //     $rootScope.data.tabsvisible = false;
-    //     $rootScope.data.pagename = "";
-    //     $rootScope.data.showTopNav = false;
-    //     console.log("State Params: ", event);
-    //     console.log("State Params: ", data);
-    // });
-
-    // $scope.$on("$ionicView.enter", function(event, data){
-    //    // handle event
-    //    console.log("State Params: ", data.stateParams);
-    // });
 
     $scope.$on("$ionicView.afterEnter", function(event, data) {
         // handle event
@@ -85,16 +91,304 @@ angular.module('starter.controllers', [])
     });
 
     $rootScope.data.goto = function(path) {
+
+        if (window.cordova) {
+            window.plugins.nativepagetransitions.fade({
+                    "direction": "up"
+                },
+                function(msg) {
+                    console.log("success: " + msg)
+                },
+                function(msg) {
+                    alert("error: " + msg)
+                }
+            );
+        }
         $location.path(path);
     }
+    $rootScope.data.checkIfInfoFilled = function() {
+        if ($rootScope.data.usersession[2].length && $rootScope.data.usersession[3].length && $rootScope.data.usersession[4].length && $rootScope.data.usersession[5] && $rootScope.data.usersession[6].length) {
+            // window.location.href = "#/app/wall";
+        } else {
+            window.location.href = "#/app/profile";
+            $scope.showToast("Please Fill Profile First :)", 'long', 'bottom');
+        }
+    };
+
+    $scope.checkRecentMsg = function() {
+        $http({
+            method: "GET",
+            url: path + '/master.php',
+            params: {
+                user: $rootScope.data.usersession[0],
+                to: $rootScope.data.to[0],
+                lastId: $scope.lastMsgId,
+                type: 'getMsg'
+            }
+        }).then(function mySucces(response) {
+
+            //ar d = response.data[7];
+            //d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+            angular.forEach(response.data, function(value, key) {
+                //console.log($rootScope.data.myid + "---" + value[1]);
+                // console.log($rootScope.data.myid != value[1]);
+                $scope.messages.push({
+                    other: $rootScope.data.usersession[0] == value[1],
+                    text: value[5],
+                    time: value[7]
+                });
+                $scope.lastMsgId = value[0];
+            });
+            $timeout(function() {
+                $(".timeago").timeago();
+            }, 0);
+
+        }, function myError(response) {
+            //console.log(response);
+            //$rootScope.data.isLoadingNext = false;
+        });
+        console.log("checking latest msg");
+    }
+
+    $rootScope.data.startCheckMsg = function() {
+        $rootScope.data.checkMsgIntervelObj = $interval(function() {
+            $scope.checkRecentMsg();
+        }, 2000);
+    }
+
+
+    $scope.hideTime = true;
+
+    var alternate,
+        isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+
+    $scope.sendMessage = function() {
+        // alternate = !alternate;
+
+
+
+        $http({
+            method: "GET",
+            url: path + '/master.php',
+            params: {
+                msg: $scope.data.message,
+                toUserid: $rootScope.data.to[0],
+                toUsernm: $rootScope.data.to[1],
+                frmusr: $rootScope.data.usersession[1],
+                frmusrid: $rootScope.data.usersession[0],
+                not: 'y',
+                type: 'privmsg'
+            }
+        }).then(function mySucces(response) {
+            //console.log(response);
+            $ionicScrollDelegate.$getByHandle('chatMainScroll').scrollBottom();
+        }, function myError(response) {
+            //console.log(response);
+            //$rootScope.data.isLoadingNext = false;
+        });
+
+
+
+
+        var d = new Date();
+        d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+
+        // $scope.messages.push({
+        //   userId: alternate ? '12345' : '54321',
+        //   text: $scope.data.message,
+        //   time: d
+        // });
+        $scope.messages.push({
+            other: true,
+            text: $scope.data.message,
+            time: d
+        });
+
+        delete $scope.data.message;
+        $ionicScrollDelegate.$getByHandle('chatMainScroll').scrollBottom(true);
+
+    };
+
+
+    $scope.inputUp = function() {
+        if (isIOS) $scope.data.keyboardHeight = 216;
+        $timeout(function() {
+            $ionicScrollDelegate.$getByHandle('chatMainScroll').scrollBottom(true);
+        }, 300);
+
+    };
+
+    $scope.inputDown = function() {
+        if (isIOS) $scope.data.keyboardHeight = 0;
+        $ionicScrollDelegate.resize();
+    };
+
+    $scope.closeKeyboard = function() {
+        // cordova.plugins.Keyboard.close();
+    };
+
+
+    // $scope.data = {};
+    // //$scope.myId = $rootScope.data.usersession[0];
+
 
     $rootScope.data.openChat = function(toid) {
+        $rootScope.data.isChatVisible = true;
+        $rootScope.data.checkMsgIntervelObj = null;
+        $rootScope.data.startCheckMsg();
+        $scope.messages = [];
+        $scope.modalChat.show();
+        $http({
+            method: "GET",
+            url: path + '/master.php',
+            params: {
+                frmusr: toid,
+                type: 'getUserdetails'
+            }
+        }).then(function mySucces(response) {
+            console.log(response.data);
+            var data = response.data;
+            $rootScope.data.to = response.data[0]; //3013;
+            //$location.path('/app/chat');
 
-        $rootScope.data.toid = toid; //3013;
-        //console.log($rootScope.data.myid + "===" + $rootScope.data.toid);
-        //window.location.href = "#/app/chat";
-        $location.path('/app/chat');
+
+            $scope.lastMsgId = "";
+
+            $http({
+                method: "GET",
+                url: path + '/master.php',
+                params: {
+                    user: $rootScope.data.usersession[0],
+                    to: $rootScope.data.to[0],
+                    type: 'getlastid'
+                }
+            }).then(function mySucces(response) {
+                //console.log(response.data);
+                $scope.lastMsgId = response.data;
+
+
+                $http({
+                    method: "GET",
+                    url: path + '/master.php',
+                    params: {
+                        user: $rootScope.data.usersession[0],
+                        to: $rootScope.data.to[0],
+                        lastId: $scope.lastMsgId,
+                        type: 'getOlderMsg'
+                    }
+                }).then(function mySucces(response) {
+                    //console.log(response.data);
+                    //ar d = response.data[7];
+                    //d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+                    angular.forEach(response.data, function(value, key) {
+                        //console.log($rootScope.data.myid + "---" + value[1]);
+                        //console.log($rootScope.data.myid != value[1]);
+                        $scope.messages.push({
+                            other: $rootScope.data.usersession[0] == value[1],
+                            text: value[5],
+                            time: value[7]
+                        });
+                        $scope.lastMsgId = value[0];
+                    });
+                    $timeout(function() {
+                        $(".timeago").timeago();
+                    }, 0);
+                    $ionicScrollDelegate.$getByHandle('chatMainScroll').scrollBottom();
+
+                }, function myError(response) {
+                    //console.log(response);
+                    //$rootScope.data.isLoadingNext = false;
+                });
+
+
+            }, function myError(response) {
+                //console.log(response);
+                //$rootScope.data.isLoadingNext = false;
+            });
+
+
+
+
+
+
+
+
+        }, function myError(response) {});
+
     };
+
+
+
+    $ionicPlatform.onHardwareBackButton(function() {
+        if ($rootScope.data.isChatVisible) {
+            $scope.closeModalChat();
+        } else if (!$rootScope.data.isChatVisible && $state.current.name == 'app.wall') {
+            $ionicPopup.confirm({
+                title: 'Hey! Want to exit?',
+                template: 'Want to exit?',
+                cancelText: 'No :)',
+                okText: 'Yes :|'
+            }).then(function(res) {
+                if (res) {
+                    ionic.Platform.exitApp();
+                }
+            });
+        }
+
+        $scope.showToast($state.current.name, 'short', 'bottom');
+        $scope.showToast($rootScope.data.isChatVisible, 'short', 'bottom');
+        //console.log();
+    });
+
+
+
+
+
+    $ionicModal.fromTemplateUrl('templates/chat.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+
+
+
+        $scope.modalChat = modal;
+
+
+    });
+    $scope.openModal = function() {
+        $scope.modalChat.show();
+    };
+    $scope.closeModalChat = function() {
+        $scope.modalChat.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.modalChat.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+        $rootScope.data.isChatVisible = false;
+        $interval.cancel($rootScope.data.checkMsgIntervelObj);
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+        // Execute action
+    });
+
+    $scope.$on('modal.shown', function() {
+
+    });
+
+
+
+
+
+
+
+
+
+
+
     $rootScope.data.otheruserid = localStorageService.get("otheruser");
     $rootScope.data.allCountries = localStorageService.get("countries");
     $rootScope.data.usersession = localStorageService.get("usersession");
@@ -123,7 +417,7 @@ angular.module('starter.controllers', [])
                 localStorageService.set("countries", response.data);
                 $rootScope.data.allCountries = localStorageService.get("countries");
             }, function myError(response) {
-                console.log(response);
+                //console.log(response);
                 //$rootScope.data.isLoadingNext = false;
             });
         }
@@ -142,7 +436,8 @@ angular.module('starter.controllers', [])
 
         if (0) {
             $rootScope.data.usersession = localStorageService.get("usersession");
-            window.location.href = "#/app/wall";
+            $rootScope.data.checkIfInfoFilled();
+            //window.location.href = "#/app/wall";
         } else {
             $http({
                 method: "GET",
@@ -156,8 +451,10 @@ angular.module('starter.controllers', [])
                 localStorageService.set("usersession", response.data[0]);
                 $rootScope.data.usersession = localStorageService.get("usersession");
                 window.location.href = "#/app/wall";
+                $rootScope.data.checkIfInfoFilled();
+
             }, function myError(response) {
-                //console.log(response);
+                ////console.log(response);
                 //$rootScope.data.isLoadingNext = false;
             });
         }
@@ -165,11 +462,15 @@ angular.module('starter.controllers', [])
     };
 
     $scope.showToast = function(message, duration, location) {
-        $cordovaToast.show(message, duration, location).then(function(success) {
-            console.log("The toast was shown");
-        }, function(error) {
-            console.log("The toast was not shown due to " + error);
-        });
+        if ($scope.enableToast) {
+            $cordovaToast.show(message, duration, location).then(function(success) {
+                console.log("The toast was shown");
+            }, function(error) {
+                console.log("The toast was not shown due to " + error);
+            });
+        } else {
+            alert(message);
+        }
     }
 
     var navIcons = document.getElementsByClassName('ion-navicon');
@@ -179,84 +480,14 @@ angular.module('starter.controllers', [])
         });
     }
 
-    ////////////////////////////////////////
-    // Layout Methods
-    ////////////////////////////////////////
-
-    $scope.hideNavBar = function() {
-        //document.getElementsByTagName('ion-nav-bar')[0].style.display = 'none';
-    };
-
-    $scope.showNavBar = function() {
-        // document.getElementsByTagName('ion-nav-bar')[0].style.display = 'block';
-    };
-
-    $scope.noHeader = function() {
-        // var content = document.getElementsByTagName('ion-content');
-        // for (var i = 0; i < content.length; i++) {
-        //     if (content[i].classList.contains('has-header')) {
-        //         content[i].classList.toggle('has-header');
-        //     }
-        // }
-    };
-
-    $scope.setExpanded = function(bool) {
-        //$scope.isExpanded = bool;
-    };
-
-    $scope.setHeaderFab = function(location) {
-        // var hasHeaderFabLeft = false;
-        // var hasHeaderFabRight = false;
-
-        // switch (location) {
-        //     case 'left':
-        //         hasHeaderFabLeft = true;
-        //         break;
-        //     case 'right':
-        //         hasHeaderFabRight = true;
-        //         break;
-        // }
-
-        // $scope.hasHeaderFabLeft = hasHeaderFabLeft;
-        // $scope.hasHeaderFabRight = hasHeaderFabRight;
-    };
-
-    $scope.hasHeader = function() {
-        // var content = document.getElementsByTagName('ion-content');
-        // for (var i = 0; i < content.length; i++) {
-        //     if (!content[i].classList.contains('has-header')) {
-        //         content[i].classList.toggle('has-header');
-        //     }
-        // }
-
-    };
-
-    $scope.hideHeader = function() {
-        // $scope.hideNavBar();
-        // $scope.noHeader();
-    };
-
-    $scope.showHeader = function() {
-        // $scope.showNavBar();
-        // $scope.hasHeader();
-    };
-
-    $scope.clearFabs = function() {
-        // var fabs = document.getElementsByClassName('button-fab');
-        // if (fabs.length && fabs.length > 1) {
-        //     fabs[0].remove();
-        // }
-    };
 
 })
 
 .controller('LoginCtrl', function($scope, $rootScope, $http, $state, $timeout, $stateParams, ionicMaterialInk, $ionicSideMenuDelegate, localStorageService) {
-    $scope.$parent.clearFabs();
-    $timeout(function() {
-        $scope.$parent.hideHeader();
-    }, 0);
+
+
     ionicMaterialInk.displayEffect();
-    $ionicSideMenuDelegate.canDragContent($state.current.showSideMenu);
+    $ionicSideMenuDelegate.canDragContent($state.current.showSideBar);
     $rootScope.data.tabsvisible = false;
     $scope.checkIfLoggedIn = function() {
         // localStorageService.remove("usersession");
@@ -275,18 +506,19 @@ angular.module('starter.controllers', [])
     };
     $scope.checkIfLoggedIn();
     $scope.loginRegister = function() {
-        var urn = "ipsjolly"; //$.trim($scope.data.username).toLowerCase();
-        var pas = "reaction9"; //$.trim($scope.data.password);
+        var urn = $.trim($scope.data.username).toLowerCase(); //"ipsjolly"; //
+        var pas = $.trim($scope.data.password); //"reaction9"; //
         if (!urn.length) {
-            if ($scope.enableToast)
-                $scope.showToast("Enter Username!", 'long', 'bottom');
+
+            $scope.showToast("Enter Username!", 'long', 'bottom');
 
 
             //alert("Enter Username!");
-            $(".username").focus();
+            //$(".username").focus();
             return false;
         } else if (!pas.length) {
-            alert("Enter Password");
+            $scope.showToast("Enter Password!", 'long', 'bottom');
+            //alert("Enter Password");
             $(".password").focus();
             return false;
         } else {
@@ -304,12 +536,12 @@ angular.module('starter.controllers', [])
                 var data = response.data;
                 console.log(data);
                 if (data == 0) {
-
+                    $scope.showToast("Password InCorrect or Username Not Available", 'long', 'bottom');
                 } else {
                     $rootScope.data.setusersession(urn);
                 }
             }, function myError(response) {
-                console.log(response);
+                //console.log(response);
                 alert(path + '/master.php');
                 alert("Oops, there was an error while registering/signing in. Sorry about that.");
             });
@@ -322,65 +554,10 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
-    // Set Header
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.$parent.setHeaderFab('left');
-
-    // Delay expansion
-    $timeout(function() {
-        $scope.isExpanded = true;
-        $scope.$parent.setExpanded(true);
-    }, 300);
-
-    // Set Motion
-    ionicMaterialMotion.fadeSlideInRight();
-
-    // Set Ink
-    ionicMaterialInk.displayEffect();
-})
-
-
-.controller('ActivityCtrl', function($scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk) {
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    $scope.$parent.setExpanded(true);
-    $scope.$parent.setHeaderFab('right');
-
-    $timeout(function() {
-        ionicMaterialMotion.fadeSlideIn({
-            selector: '.animate-fade-slide-in .item'
-        });
-    }, 200);
-
-    // Activate ink for controller
-    ionicMaterialInk.displayEffect();
-})
-
-.controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    $scope.$parent.setExpanded(true);
-    $scope.$parent.setHeaderFab(false);
-
-    // Activate ink for controller
-    ionicMaterialInk.displayEffect();
-
-    ionicMaterialMotion.pushDown({
-        selector: '.push-down'
-    });
-    ionicMaterialMotion.fadeSlideInRight({
-        selector: '.animate-fade-slide-in .item'
-    });
-
-})
 
 .controller('PostCtrl', function($scope, $http, $rootScope, $state, $ionicPopup, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
     console.log($rootScope.data.usersession);
-    $rootScope.data.myid = localStorage.getItem("userid");
+    //$rootScope.data.myid = $rootScope.data.usersession[0];//localStorage.getItem("userid");
     $scope.allPostedStatus = [];
 
     $rootScope.data.pagename = $state.current.pagename;
@@ -389,22 +566,24 @@ angular.module('starter.controllers', [])
             method: "GET",
             url: path + '/master.php',
             params: {
-                userid: $rootScope.data.myid,
+                userid: $rootScope.data.usersession[0],
                 type: 'getAllStatus'
 
             }
         }).then(function mySucces(response) {
-            console.log(response);
+            //console.log(response);
             $scope.allPostedStatus = response.data;
-            $timeout(function() {
-                $(".timeago").timeago();
-                ionicMaterialMotion.fadeSlideIn();
-                ionicMaterialInk.displayEffect();
-            }, 0);
-
+            if ($scope.allPostedStatus.length) {
+                $timeout(function() {
+                    $(".timeago").timeago();
+                    ionicMaterialMotion.fadeSlideIn();
+                    ionicMaterialInk.displayEffect();
+                }, 0);
+            }
             ionicMaterialInk.displayEffect();
+
         }, function myError(response) {
-            console.log(response);
+            //console.log(response);
             //$rootScope.data.isLoadingNext = false;
         });
     };
@@ -436,7 +615,7 @@ angular.module('starter.controllers', [])
         }).then(function mySucces(response) {
             $scope.getAllPosts();
         }, function myError(response) {
-            console.log(response);
+            //console.log(response);
             //$rootScope.data.isLoadingNext = false;
         });
     };
@@ -455,17 +634,17 @@ angular.module('starter.controllers', [])
             url: path + '/master.php',
             params: {
                 thisVal: thisVal,
-                userId: $rootScope.data.myid,
+                userId: $rootScope.data.usersession[0],
                 type: 'saveStatus'
 
             }
         }).then(function mySucces(response) {
-            console.log(response);
+            //console.log(response);
             $("#newAdMessage").val("");
             $scope.getAllPosts();
             $ionicScrollDelegate.scrollTop();
         }, function myError(response) {
-            console.log(response);
+            //console.log(response);
         });
 
 
@@ -513,12 +692,13 @@ angular.module('starter.controllers', [])
     })
     .controller('WallCtrl', function($scope, $interval, $rootScope, $state, $http, $stateParams, $timeout, ionicMaterialMotion, $ionicSideMenuDelegate, ionicMaterialInk, $ionicScrollDelegate) {
 
-        $rootScope.data.myid = localStorage.getItem("userid");
+        //$rootScope.data.myid = localStorage.getItem("userid");
         $interval.cancel($rootScope.data.checkMsgIntervelObj);
         $rootScope.data.isLoadingNext = false;
         $rootScope.data.tabsvisible = true;
         $rootScope.data.pagename = $state.current.pagename;
-        $ionicSideMenuDelegate.canDragContent($state.current.showSideMenu);
+        console.log($state.current.showSideBar);
+        $ionicSideMenuDelegate.canDragContent($state.current.showSideBar);
         $rootScope.data.returnProfile = function(obj) {
             var bio = [];
             if (obj[6] == 'f') {
@@ -553,35 +733,29 @@ angular.module('starter.controllers', [])
                 angular.forEach(response.data, function(value, key) {
                     $rootScope.data.wallList.push(value);
                 });
-                console.log($rootScope.data.wallList);
+                //console.log($rootScope.data.wallList);
                 $timeout(function() {
                     $(".timeago").timeago();
                     $(".loadPostPrevFrom").attr("data-lastPostId", $rootScope.data.wallList[$rootScope.data.wallList.length - 1][0]);
                     $rootScope.data.isLoadingNext = false;
                     ionicMaterialMotion.fadeSlideIn();
                     ionicMaterialInk.displayEffect();
+                    $scope.$broadcast('scroll.refreshComplete');
                     $scope.$broadcast('scroll.infiniteScrollComplete');
+
                 }, 0);
 
             }, function myError(response) {
-                console.log(response);
+                //console.log(response);
                 $rootScope.data.isLoadingNext = false;
             });
 
         };
 
 
-        $scope.loadPersonData("", "", "", "", "", "");
+        // $scope.loadPersonData("", "", "", "", "", "");
 
-        $scope.itemWallClass = function(obj){
-            if(obj[6] == 'm'){
-                return "custom-item-gredient-m";
-            }else if(obj[6] == 'f'){
-                return "custom-item-gredient-f";
-            }else{
-                return "custom-item-gredient";
-            }
-        }
+
 
         $scope.loadNextRecords = function() {
             // var thisVal = $("#selectGenderToSee").val();
@@ -605,194 +779,36 @@ angular.module('starter.controllers', [])
             }
         };
     }).controller('ChatCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
-        console.log($rootScope.data.myid + "===" + $rootScope.data.toid);
-        $scope.lastMsgId = "";
-        $rootScope.data.checkMsgIntervelObj = null;
-        $scope.checkRecentMsg = function() {
-            $http({
-                method: "GET",
-                url: path + '/master.php',
-                params: {
-                    user: $rootScope.data.myid,
-                    to: $rootScope.data.toid,
-                    lastId: $scope.lastMsgId,
-                    type: 'getMsg'
-                }
-            }).then(function mySucces(response) {
+        //console.log($rootScope.data.myid + "===" + $rootScope.data.to);
 
-                //ar d = response.data[7];
-                //d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-                angular.forEach(response.data, function(value, key) {
-                    console.log($rootScope.data.myid + "---" + value[1]);
-                    console.log($rootScope.data.myid != value[1]);
-                    $scope.messages.push({
-                        other: $rootScope.data.myid == value[1],
-                        text: value[5],
-                        time: value[7]
-                    });
-                    $scope.lastMsgId = value[0];
-                });
-
-
-            }, function myError(response) {
-                console.log(response);
-                //$rootScope.data.isLoadingNext = false;
-            });
-            console.log("checking latest msg");
-        }
-
-        $rootScope.data.startCheckMsg = function() {
-            $rootScope.data.checkMsgIntervelObj = $interval(function() {
-                $scope.checkRecentMsg();
-            }, 2000);
-        }
-
-
-
-        $http({
-            method: "GET",
-            url: path + '/master.php',
-            params: {
-                user: $rootScope.data.myid,
-                to: $rootScope.data.toid,
-                type: 'getlastid'
-            }
-        }).then(function mySucces(response) {
-            console.log(response.data);
-            $scope.lastMsgId = response.data;
-
-
-            $http({
-                method: "GET",
-                url: path + '/master.php',
-                params: {
-                    user: $rootScope.data.usersession[0],
-                    to: $rootScope.data.toid,
-                    lastId: $scope.lastMsgId,
-                    type: 'getOlderMsg'
-                }
-            }).then(function mySucces(response) {
-                console.log(response.data);
-                //ar d = response.data[7];
-                //d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-                angular.forEach(response.data, function(value, key) {
-                    console.log($rootScope.data.myid + "---" + value[1]);
-                    console.log($rootScope.data.myid != value[1]);
-                    $scope.messages.push({
-                        other: $rootScope.data.myid == value[1],
-                        text: value[5],
-                        time: value[7]
-                    });
-                    $scope.lastMsgId = value[0];
-                });
-                $ionicScrollDelegate.scrollBottom();
-                // $rootScope.data.startCheckMsg();
-            }, function myError(response) {
-                console.log(response);
-                //$rootScope.data.isLoadingNext = false;
-            });
-
-
-        }, function myError(response) {
-            console.log(response);
-            //$rootScope.data.isLoadingNext = false;
-        });
+        return;
 
 
 
 
-        $scope.hideTime = true;
-
-        var alternate,
-            isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-
-        $scope.sendMessage = function() {
-            // alternate = !alternate;
-
-
-
-            $http({
-                method: "GET",
-                url: path + '/master.php',
-                params: {
-                    msg: $scope.data.message,
-                    toUserid: $rootScope.data.toid,
-                    toUsernm: "toUsrnm",
-                    frmusr: "frmMe",
-                    frmusrid: $rootScope.data.myid,
-                    not: 'y',
-                    type: 'privmsg'
-                }
-            }).then(function mySucces(response) {
-                console.log(response);
-                $ionicScrollDelegate.scrollBottom();
-            }, function myError(response) {
-                console.log(response);
-                //$rootScope.data.isLoadingNext = false;
-            });
 
 
 
 
-            var d = new Date();
-            d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-
-            // $scope.messages.push({
-            //   userId: alternate ? '12345' : '54321',
-            //   text: $scope.data.message,
-            //   time: d
-            // });
-            $scope.messages.push({
-                other: true,
-                text: $scope.data.message,
-                time: d
-            });
-
-            delete $scope.data.message;
-            $ionicScrollDelegate.scrollBottom(true);
-
-        };
-
-
-        $scope.inputUp = function() {
-            if (isIOS) $scope.data.keyboardHeight = 216;
-            $timeout(function() {
-                $ionicScrollDelegate.scrollBottom(true);
-            }, 300);
-
-        };
-
-        $scope.inputDown = function() {
-            if (isIOS) $scope.data.keyboardHeight = 0;
-            $ionicScrollDelegate.resize();
-        };
-
-        $scope.closeKeyboard = function() {
-            // cordova.plugins.Keyboard.close();
-        };
-
-
-        $scope.data = {};
-        $scope.myId = $rootScope.data.myid;
-        $scope.messages = [];
-
+     
 
 
     }).controller('ProfileCtrl', function($scope, $interval, $state, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
-        $rootScope.data.myid = localStorage.getItem("userid");
-
+        //$rootScope.data.myid = localStorage.getItem("userid");
+ $timeout(function() {
+             
         $rootScope.data.pagename = $state.current.pagename;
         $scope.getMyProfile = function() {
             $http({
                 method: "GET",
                 url: path + '/master.php',
                 params: {
-                    frmusr: $rootScope.data.myid,
+                    frmusr: $rootScope.data.usersession[0],
                     type: 'getUserdetails'
                 }
             }).then(function mySucces(response) {
-                console.log(response);
+                //console.log(response);
                 var data = response.data;
                 var el = $("#myGender");
                 el.val(data[0][4]).attr('selected', true).siblings('option').removeAttr('selected');
@@ -810,8 +826,9 @@ angular.module('starter.controllers', [])
 
                 $(".mYuserName").html(data[0][1]);
                 ionicMaterialInk.displayEffect();
+                ionicMaterialMotion.fadeSlideIn();
             }, function myError(response) {
-                console.log(response);
+                ////console.log(response);
                 //$rootScope.data.isLoadingNext = false;
             });
 
@@ -821,26 +838,29 @@ angular.module('starter.controllers', [])
         $scope.saveProfile = function() {
             var domSave = $("#saveProfile");
             var fill = true;
+            var errorText = "";
             $(".saveProfileitem").not('span').each(function() {
-                var thisVal = domSave.val().length;
+                var thisVal = $(this).val().length;
                 //console.log(thisVal);
                 if (thisVal) {
-                    domSave.closest("label").removeClass("error");
+                    $(this).closest("label").removeClass("error");
                     //fill = true;
                 } else {
-                    domSave.closest("label").addClass("error");
-                    var thisMsg = domSave.attr("data-message");
-
+                    $(this).closest("label").addClass("error");
+                    var thisMsg = $(this).attr("data-message");
+                    ////console.log(thisMsg);   
                     $(".alertMsg").html(thisMsg);
+                    errorText += thisMsg + '\n';
                     fill = false;
                 }
             });
 
-            //console.log(fill);
+            ////console.log(fill);
             if (fill) {
-                $(".alertMsgWrap").removeClass("active");
+                //$(".alertMsgWrap").removeClass("active");
             } else {
-                $(".alertMsgWrap").addClass("active");
+                //$(".alertMsgWrap").addClass("active");
+                $scope.showToast(errorText, 'long', 'top');
                 return false;
             }
 
@@ -859,7 +879,7 @@ angular.module('starter.controllers', [])
                     gm: gm,
                     cn: cn,
                     sn: sn,
-                    user: $.trim(localStorage.getItem("username")),
+                    user: $.trim($rootScope.data.usersession[0]),
                     type: 'saveset'
                 },
                 beforeSend: function() {
@@ -872,12 +892,15 @@ angular.module('starter.controllers', [])
                         $(".ui-loader").hide();
                         $("#saveProfile").html("Saved! :)");
                         //$("#saveProfile").button("refresh");
-                        alert("Settings Saved!");
+                        //alert("Settings Saved!");
+                        $scope.showToast("Settings Saved!", 'long', 'top');
                         $("#postMessage").attr("data-setpro", 1);
+                        $rootScope.data.setusersession($rootScope.data.usersession[1]);
+                        // $rootScope.data.checkIfInfoFilled();
                         //$.mobile.changePage('#showPersons');
 
                     } else {
-                        $(".ui-loader").hide();
+                        //$(".ui-loader").hide();
                         $("#saveProfile").html("Error :(");
                         //$("#saveProfile").button("refresh");
                         alert("Oops, there was an error while updating your profile. Sorry about that.");
@@ -896,19 +919,19 @@ angular.module('starter.controllers', [])
 
 
 
-
+                    }, 1000);
 
 
     }).controller('FilterCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
-        $rootScope.data.myid = localStorage.getItem("userid");
+        // $rootScope.data.myid = localStorage.getItem("userid");
 
 
 
 
     }).controller('MessagesCtrl', function($scope, $interval, $state, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
-        $rootScope.data.myid = localStorage.getItem("userid");
+        //$rootScope.data.myid = localStorage.getItem("userid");
         $scope.allMessages = [];
         $scope.showMsgType = 'resc';
 
@@ -920,23 +943,25 @@ angular.module('starter.controllers', [])
                 method: "GET",
                 url: path + '/master.php',
                 params: {
-                    usrid: $rootScope.data.myid,
+                    usrid: $rootScope.data.usersession[0],
                     msgtype: msgtype,
                     type: 'getMessagesRec'
 
                 }
             }).then(function mySucces(response) {
-                console.log(response);
+                ////console.log(response);
 
                 $scope.allMessages = response.data;
-                $timeout(function() {
-                    $(".timeago").timeago();
-                    ionicMaterialMotion.fadeSlideIn();
-                    ionicMaterialInk.displayEffect();
+                if ($scope.allMessages.length) {
+                    $timeout(function() {
+                        $(".timeago").timeago();
+                        ionicMaterialMotion.fadeSlideIn();
+                        ionicMaterialInk.displayEffect();
 
-                }, 0);
+                    }, 0);
+                }
             }, function myError(response) {
-                console.log(response);
+                ////console.log(response);
             });
         };
         $scope.loadMessages('resc');
@@ -946,7 +971,7 @@ angular.module('starter.controllers', [])
 
     }).controller('AboutUserCtrl', function($scope, $interval, $document, $rootScope, $http, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicScrollDelegate) {
 
-        console.log($rootScope.data.otheruserid);
+        // console.log($rootScope.data.otheruserid);
         $scope.loadOtherProfile = function(msgtype) {
             $scope.showMsgType = msgtype;
             $http({
@@ -958,14 +983,15 @@ angular.module('starter.controllers', [])
 
                 }
             }).then(function mySucces(response) {
-                console.log(response);
+
                 $scope.otherProfile = response.data[0];
-            }, function myError(response) {
                 console.log(response);
+            }, function myError(response) {
+                ////console.log(response);
             });
         };
         $scope.loadOtherProfile();
-        $scope.allPostedStatus = [];
+        $scope.allPostedInfoStatus = [];
         $scope.getAllPosts = function() {
             $http({
                 method: "GET",
@@ -977,13 +1003,20 @@ angular.module('starter.controllers', [])
                 }
             }).then(function mySucces(response) {
                 console.log(response);
-                $scope.allPostedStatus = response.data;
-                $timeout(function() {
-                    $(".timeago").timeago();
-                }, 0);
-                // $ionicScrollDelegate.scrollBottom();
+                $scope.allPostedInfoStatus = response.data;
+                if ($scope.allPostedInfoStatus.length) {
+                    $timeout(function() {
+                        $(".timeago").timeago();
+                        ionicMaterialMotion.fadeSlideIn();
+                        ionicMaterialInk.displayEffect();
+                    }, 0);
+                }
+
+
+
+
             }, function myError(response) {
-                console.log(response);
+                ////console.log(response);
                 //$rootScope.data.isLoadingNext = false;
             });
         };

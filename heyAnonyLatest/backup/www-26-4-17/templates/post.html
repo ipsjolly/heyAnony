@@ -1,0 +1,32 @@
+<ion-view view-title="Post">
+    <ion-content   class="header-top-margin">
+  
+        <div class="list" style="width: 100%; " >
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Write Your Mind!</span>
+            <textarea id="newAdMessage" rows="4" placeholder="Write Your Mind!"></textarea>
+          </label>
+          <button class="button button-block custom-btn green-custom-gredient-btn ink" ng-click="postMyStatus()">Get Posted!</button>
+        </div>
+        <h4 class="border-top"><i class="icon ion-android-done-all"></i> My All Posts</h4>
+             <ion-list>
+            <ion-item class="animate-fade-slide-in custom-item-gredient" ng-repeat="p in allPostedStatus track by $index">
+                <div class="item item-body left-section">
+                    <div class="wall-status-text">{{p[5]}}</div> 
+                    <p>
+                        <a class="subdued 3"  style="display: inline-block;"><i class="icon ion-android-time"></i>
+                        <span class="timeago" title="{{p[9]}}">{{p[9]}}</span></a>
+                    </p>
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-top">
+                    <a class="tab-item ink" ng-click="delConfirm(p[0])" >
+                        <i class="icon ion-android-delete"></i>Delete
+                    </a>
+                </div>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+
+
+    
+</ion-view>

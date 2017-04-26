@@ -29,14 +29,14 @@
 
 </ion-list> -->
 
- <ion-list>
+ <ion-list class="animate-fade-slide-in">
 
             <ion-item class="animate-fade-slide-in custom-item-gredient" ng-repeat="w in allMessages  track by $index">
 
                 <div class="item item-body">
                     <div class="wall-status-text">"{{w[5]}}"</div> 
                     <p>
-                        <a class="subdued 1" style="display: inline-block;"><i class="icon ion-female" ng-if="data.returnProfile(w).gender == 'Female'"></i><i class="icon ion-male" ng-if="data.returnProfile(w).gender == 'Male'"></i> {{w[4]}}</a>
+                        <a class="subdued 1" style="display: inline-block;"><i class="icon ion-female" ng-if="data.returnProfile(w).gender == 'Female'"></i><i class="icon ion-male" ng-if="data.returnProfile(w).gender == 'Male'"></i> <span ng-if="showMsgType == 'resc'">{{w[2]}}</span><span ng-if="showMsgType == 'sent'">{{w[4]}}</span></a>
                         <!-- <a class="subdued 2" style="display: inline-block;"><i class="icon ion-location"></i> {{w[4]}}, {{w[3]}}</a> -->
                         <a class="subdued 3"  style="display: inline-block;"><i class="icon ion-android-time"></i>
                         <span class="timeago" title="{{w[7]}}">{{w[7]}}</span></a>
@@ -46,7 +46,7 @@
                     <a class="tab-item ink" ng-click="delConfirm(p[0])" data-ink-color="#336699" data-ink-opacity="0.5">
                         <i class="icon ion-android-delete"></i> Remove
                     </a>
-                    <a class="tab-item ink" ng-click="data.openChat(w[0])" data-ink-color="#336699" data-ink-opacity="0.5">
+                    <a class="tab-item ink" ng-click="data.openChat(w[1])" data-ink-color="#336699" data-ink-opacity="0.5">
                         <i class="icon ion-chatbubble-working"></i>Message
                     </a>
                     <a class="tab-item ink" ng-click="data.setOtherUser(w[1]);data.goto('/app/aboutuser');" data-ink-color="#336699" data-ink-opacity="0.5">

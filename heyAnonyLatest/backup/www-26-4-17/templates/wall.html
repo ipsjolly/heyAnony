@@ -1,0 +1,33 @@
+<ion-view view-title="Wall" >
+    
+    <ion-content ng-class="{expanded:$scope.isExpanded}" class="header-top-margin loadPostPrevFrom" >
+
+             <ion-list>
+            
+            <ion-item class="animate-fade-slide-in" ng-class="itemWallClass(w)" ng-repeat="w in data.wallList track by $index">
+                <div class="item item-body">
+                    <div class="wall-status-text">{{::w[5]}}</div> 
+                    <p>
+                        <a class="subdued 1" style="display: inline-block;"><i class="icon ion-female" ng-if="data.returnProfile(w).gender == 'Female'"></i><i class="icon ion-male" ng-if="data.returnProfile(w).gender == 'Male'"></i> {{::w[2]}} of {{::w[10]}}</a>
+                        <a class="subdued 2" style="display: inline-block;"><i class="icon ion-ios-location"></i> {{::w[4]}}, {{::w[3]}}</a>
+                        <a class="subdued 3"  style="display: inline-block;"><i class="icon ion-android-time"></i>
+                        <span class="timeago" title="{{::w[9]}}">{{::w[9]}}</span></a>
+                    </p>
+                </div>
+                <div  ng-if="w[1] != data.usersession[0]" class="item tabs tabs-secondary tabs-icon-top">
+                    
+                    <a class="tab-item ink" ng-click="data.openChat(w[1])" >
+                        <i class="icon ion-chatbubble-working"></i>Message
+                    </a>
+                    <a class="tab-item ink" ng-click="data.setOtherUser(w[1]);data.goto('/app/aboutuser');" >
+                        <i class="icon ion-ios-information"></i>Profile
+                    </a>
+                </div>
+            </ion-item>
+
+  </ion-list>
+
+                  <ion-infinite-scroll on-infinite="loadNextRecords()" distance="10%"></ion-infinite-scroll>
+
+    </ion-content>
+</ion-view>

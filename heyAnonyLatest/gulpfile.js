@@ -49,3 +49,14 @@ gulp.task('git-check', function(done) {
   }
   done();
 });
+
+
+var templateCache = require('gulp-angular-templatecache');
+gulp.task('template', function(done){
+    gulp.src('./www/templates/**/*.html')
+    .pipe(templateCache({
+        standalone:true,
+        root: 'templates'}))
+    .pipe(gulp.dest('./www/dist'))
+    .on('end', done);
+});

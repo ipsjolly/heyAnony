@@ -1,0 +1,27 @@
+<ion-view view-title="Login" align-title="left">
+    <ion-content style="background: url(img/login.jpg) center; background-size: cover;">
+        <div class="hero flat">
+            <div class="content">
+                <div class="app-icon bounce-start"></div>
+                <!-- <h1>Hey Anony</h1> -->
+            </div>
+        </div>
+        <div class="login-container hero hide-top ">
+            <div ng-class="{'ng-hide-custom':alreadyLogged}">
+                <ion-md-input placeholder="Username" type="text" ng-model="data.username"></ion-md-input>
+                <ion-md-input placeholder="Password" type="text" ng-model="data.password"></ion-md-input>
+                <div class="padding">
+                    <button class="button custom-btn button-block button-full button-positive ink" ng-click="loginRegister();"><i class="ion-log-in"> Register / Sign in</i></button>
+                </div>
+            </div>
+            <div ng-class="{'ng-hide-custom':!alreadyLogged}">
+                <div class="padding">
+                    <button class="welcomeusername ink button icon-left  button-positive" >
+                   <span class=""> Hey! {{data.username}} </span><i class="ion-android-sync icon-spin"></i></button>
+                   <!-- <div class="welcome-back">  
+                   <span class="welcomeusername"> {{data.username}}</span> </div> -->
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
